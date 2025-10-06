@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AutomaHost</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --verde: #28a745;
+            --verde-escuro: #218838;
+            --cinza-claro: #f8f9fa;
+            --cinza: #6c757d;
+            --cinza-escuro: #343a40;
+            --branco: #ffffff;
+        }
+
+        body {
+            background: var(--cinza-claro);
+            color: var(--cinza-escuro);
+        }
+
+        /* === HEADER === */
+        .dashboard-header {
+            background: var(--branco);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            height: 45px; /* Aumentei a logo */
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text .main {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--cinza-escuro);
+        }
+
+        .logo-text .sub {
+            font-size: 12px;
+            color: var(--cinza);
+            font-weight: normal;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--verde);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* === LAYOUT PRINCIPAL === */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* === SIDEBAR MENU === */
+        .sidebar {
+            width: 250px;
+            background: var(--cinza-escuro);
+            color: white;
+            padding: 30px 0;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--cinza);
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--verde);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* === CONTEÚDO PRINCIPAL === */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section h1 {
+            margin-bottom: 10px;
+        }
+
+        /* === CARDS DE SERVIÇOS === */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .service-card {
+            background: var(--branco);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card h3 {
+            color: var(--verde);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .service-card p {
+            color: var(--cinza);
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: var(--verde);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--verde-escuro);
+        }
+
+        /* === STATUS DO SERVIÇO === */
+        .status-section {
+            background: var(--branco);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--cinza-claro);
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* === RESPONSIVO === */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px 0;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                padding: 15px 20px;
+            }
+
+            .user-info span {
+                display: none;
+            }
+
+            .logo-text .main {
+                font-size: 20px;
+            }
+
+            .logo-text .sub {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="dashboard-header">
+        <div class="logo">
+            <img src="https://ofertasdigitais.github.io/automa/logo.png" alt="AutomaHost" class="logo-img">
+            <div class="logo-text">
+                <div class="main">AutomaHost</div>
+                <div class="sub">Soluções Inteligentes</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span>Olá, Cliente!</span>
+            <div class="user-avatar">C</div>
+        </div>
+    </header>
+
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="dashboard-container">
+        <!-- MENU LATERAL -->
+        <nav class="sidebar">
+            <a href="#perfil" class="menu-item active">
+                <i class="fas fa-user"></i>
+                Perfil
+            </a>
+            <a href="#pagamentos" class="menu-item">
+                <i class="fas fa-credit-card"></i>
+                Pagamentos
+            </a>
+            <a href="#ajuda" class="menu-item">
+                <i class="fas fa-headset"></i>
+                Ajuda & Suporte
+            </a>
+            <a href="#servicos" class="menu-item">
+                <i class="fas fa-server"></i>
+                Meus Serviços
+            </a>
+            <a href="#faturas" class="menu-item">
+                <i class="fas fa-file-invoice"></i>
+                Faturas
+            </a>
+            <a href="login.html" class="menu-item" style="margin-top: 20px; color: #dc3545;">
+                <i class="fas fa-sign-out-alt"></i>
+                Sair
+            </a>
+        </nav>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main-content">
+            <!-- SEÇÃO DE BOAS-VINDAS -->
+            <section class="welcome-section">
+                <h1>Bem-vindo ao Portal do cliente!</h1>
+                <p>Aqui você gerencia todos os seus serviços e conta.</p>
+            </section>
+
+            <!-- CARDS DE SERVIÇOS -->
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3><i class="fas fa-cube"></i> Plano de Serviço</h3>
+                    <p>Gerencie seu plano atual</p>
+                    <a href="#plano" class="btn">Configurar</a>
+                </div>
+
+                <div class="service-card">
+                    <h3><i class="fas fa-database"></i> Backup</h3>
+                    <p>Acesse o painel de controle de seus dados</p>
+                    <a href="#backup" class="btn">Acessar</a>
+                </div>
+
+                <div class="service-card">
+                    <h3><i class="fas fa-info-circle"></i> Suporte</h3>
+                    <p>Consulte informações referente ao uso do Software</p>
+                    <a href="#suporte" class="btn">Consultar</a>
+                </div>
+            </div>
+
+            <!-- STATUS DOS SERVIÇOS -->
+            <section class="status-section">
+                <h2 style="margin-bottom: 20px; color: var(--cinza-escuro);">Status dos Serviços</h2>
+                
+                <div class="status-item">
+                    <div>
+                        <strong>Plano Atual</strong>
+                        <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Licença Business</p>
+                    </div>
+                    <span class="status-badge status-active">Ativo</span>
+                </div>
+
+                <div class="status-item">
+                    <div>
+                        <strong>Último backup realizado</strong>
+                        <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Realizado hoje as 12:30</p>
+                    </div>
+                    <span class="status-badge status-active">Concluído</span>
+                </div>
+
+                <div class="status-item">
+                    <div>
+                        <strong>SSL Certificate</strong>
+                        <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Válido até 15/11/2026</p>
+                    </div>
+                    <span class="status-badge status-active">Ativo</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Simulação de redirecionamento do login
+        console.log('Dashboard carregado - usuário autenticado');
+
+        // Navegação do menu
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if(this.getAttribute('href') === 'login.html') {
+                    if(!confirm('Deseja realmente sair?')) {
+                        e.preventDefault();
+                    }
+                    return;
+                }
+                
+                // Remove active de todos
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                // Adiciona active no clicado
+                this.classList.add('active');
+                
+                // Aqui você pode carregar conteúdo dinâmico conforme o menu
+                const section = this.getAttribute('href').replace('#', '');
+                console.log('Navegando para:', section);
+            });
+        });
+
+        // Simular dados do usuário (em produção viria do backend)
+        const userData = {
+            name: "Cliente AutomaHost",
+            email: "cliente@automahost.com.br",
+            plan: "Business"
+        };
+
+        // Atualizar informações do usuário
+        document.querySelector('.user-info span').textContent = `Olá, ${userData.name.split(' ')[0]}!`;
+        document.querySelector('.user-avatar').textContent = userData.name.charAt(0);
+    </script>
+</body>
+</html>
