@@ -29,7 +29,6 @@
             overflow: hidden;
             width: 100%;
             max-width: 420px;
-            position: relative;
         }
 
         .login-header {
@@ -40,27 +39,20 @@
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
             margin-bottom: 15px;
         }
 
-        .logo i {
-            font-size: 32px;
-            color: #38a169;
-        }
-
-        .logo h1 {
-            font-size: 28px;
-            font-weight: 700;
+        .logo-img {
+            max-width: 200px;
+            height: auto;
+            filter: brightness(0) invert(1);
         }
 
         .login-header h2 {
             font-size: 18px;
             font-weight: 400;
             opacity: 0.9;
+            margin-top: 10px;
         }
 
         .login-body {
@@ -145,6 +137,8 @@
             font-size: 14px;
             font-weight: 500;
             transition: color 0.3s ease;
+            display: inline-block;
+            margin: 5px 0;
         }
 
         .login-footer a:hover {
@@ -156,7 +150,8 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-top: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
         }
 
         .error-message {
@@ -181,6 +176,10 @@
             border-left: 4px solid #38a169;
         }
 
+        .message-icon {
+            margin-right: 8px;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 margin: 10px;
@@ -193,6 +192,15 @@
             .login-body {
                 padding: 30px 20px;
             }
+            
+            .logo-img {
+                max-width: 150px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -200,20 +208,24 @@
     <div class="login-container">
         <div class="login-header">
             <div class="logo">
-                <i class="fas fa-robot"></i>
-                <h1>AutomaHost</h1>
+                <!-- Logo da AutomaHost - URL absoluta do GitHub Pages -->
+                <img src="https://ofertasdigitais.github.io/automa/logo.png" 
+                     alt="AutomaHost" 
+                     class="logo-img"
+                     onerror="this.style.display='none'; document.getElementById('textLogo').style.display='block';">
+                <h1 id="textLogo" style="display: none;">AutomaHost</h1>
             </div>
             <h2>Portal do Cliente</h2>
         </div>
 
         <div class="login-body">
             <div class="error-message" id="errorMessage">
-                <i class="fas fa-exclamation-circle"></i>
+                <i class="fas fa-exclamation-circle message-icon"></i>
                 E-mail ou senha incorretos. Tente novamente.
             </div>
 
             <div class="success-message" id="successMessage">
-                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-check-circle message-icon"></i>
                 Login realizado com sucesso!
             </div>
 
@@ -241,18 +253,23 @@
             </form>
 
             <div class="login-footer">
-                <a href="#forgot-password">
+                <a href="https://automahost.com.br/recuperar-senha">
                     <i class="fas fa-key"></i>
                     Esqueceu sua senha?
                 </a>
+                
                 <div class="footer-links">
                     <a href="https://automahost.com.br">
                         <i class="fas fa-home"></i>
-                        Voltar ao Site
+                        Voltar ao Site Principal
                     </a>
-                    <a href="#support">
+                    <a href="https://automahost.com.br/suporte">
                         <i class="fas fa-headset"></i>
                         Suporte
+                    </a>
+                    <a href="https://automahost.com.br/contato">
+                        <i class="fas fa-envelope"></i>
+                        Contato
                     </a>
                 </div>
             </div>
@@ -273,12 +290,14 @@
             successMessage.style.display = 'none';
             
             // Simulação de validação - substituir por validação real com backend
-            if (email === 'cliente@automahost.com.br' && password === '123456') {
+            if (email && password) {
+                // Login básico - substituir por API real
                 successMessage.style.display = 'block';
                 setTimeout(() => {
-                    // window.location.href = 'dashboard.html';
-                    alert('Redirecionando para o portal...');
-                }, 1000);
+                    // Redirecionar para dashboard ou área logada
+                    alert('Login realizado! Em produção, isso redirecionaria para o dashboard.');
+                    // window.location.href = 'https://ofertasdigitais.github.io/automa/dashboard.html';
+                }, 1500);
             } else {
                 errorMessage.style.display = 'block';
             }
@@ -295,6 +314,16 @@
                 this.parentElement.querySelector('i').style.color = '#718096';
             });
         });
+
+        // Fallback para logo - se não carregar, mostra texto
+        setTimeout(() => {
+            const logoImg = document.querySelector('.logo-img');
+            const textLogo = document.getElementById('textLogo');
+            if (!logoImg.complete || logoImg.naturalHeight === 0) {
+                logoImg.style.display = 'none';
+                textLogo.style.display = 'block';
+            }
+        }, 1000);
     </script>
 </body>
 </html>
