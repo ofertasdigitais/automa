@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - AutomaHost</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -20,6 +21,9 @@
             --cinza: #6c757d;
             --cinza-escuro: #343a40;
             --branco: #ffffff;
+            --azul: #007bff;
+            --vermelho: #dc3545;
+            --laranja: #fd7e14;
         }
 
         body {
@@ -71,23 +75,23 @@
         }
 
         .user-avatar {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 18px;
-    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
-    transition: all 0.3s ease;
-}
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+        }
 
-.user-avatar:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-}
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
 
         /* === LAYOUT PRINCIPAL === */
         .dashboard-container {
@@ -360,6 +364,59 @@
             max-height: 200px;
         }
 
+        /* === GRÁFICOS === */
+        .grafico-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* === CARDS DE MÉTRICAS === */
+        .metric-card {
+            background: var(--branco);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid var(--verde);
+        }
+
+        .metric-card.vermelho {
+            border-left-color: var(--vermelho);
+        }
+
+        .metric-card.azul {
+            border-left-color: var(--azul);
+        }
+
+        .metric-card.laranja {
+            border-left-color: var(--laranja);
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            color: var(--cinza);
+            font-size: 14px;
+        }
+
+        .metric-trend {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .trend-up {
+            color: var(--verde);
+        }
+
+        .trend-down {
+            color: var(--vermelho);
+        }
+
         /* === RESPONSIVO === */
         @media (max-width: 768px) {
             .dashboard-container {
@@ -415,9 +472,9 @@
         </div>
         <div class="user-info">
             <span>Olá, Cliente!</span>
-           <div class="user-avatar">
-    <i class="fas fa-user-cog"></i>
-</div>
+            <div class="user-avatar">
+                <i class="fas fa-user-cog"></i>
+            </div>
         </div>
     </header>
 
@@ -425,8 +482,12 @@
     <div class="dashboard-container">
         <!-- MENU LATERAL -->
         <nav class="sidebar">
-            <a class="menu-item active" data-page="dashboard">
-                <i class="fas fa-tachometer-alt"></i>
+            <a class="menu-item active" data-page="inicio">
+                <i class="fas fa-home"></i>
+                Início
+            </a>
+            <a class="menu-item" data-page="dashboard">
+                <i class="fas fa-chart-bar"></i>
                 Dashboard
             </a>
             <a class="menu-item" data-page="perfil">
@@ -457,10 +518,10 @@
 
         <!-- CONTEÚDO PRINCIPAL -->
         <main class="main-content">
-            <!-- DASHBOARD -->
-            <div id="dashboard" class="page active">
+            <!-- INÍCIO -->
+            <div id="inicio" class="page active">
                 <section class="welcome-section">
-                    <h1>Bem-vindo ao Portal do Cliente!</h1>
+                    <h1>Bem-vindo ao seu Portal!</h1>
                     <p>Aqui você gerencia todos os seus serviços e conta.</p>
                 </section>
 
@@ -511,6 +572,176 @@
                         <span class="status-badge status-active">Ativo</span>
                     </div>
                 </section>
+            </div>
+
+            <!-- DASHBOARD COM GRÁFICOS DE GESTÃO EMPRESARIAL -->
+            <div id="dashboard" class="page">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-chart-bar"></i> Dashboard de Gestão</h1>
+                    <p>Métricas financeiras, estoque e desempenho comercial</p>
+                </div>
+
+                <!-- FILTROS DE PERÍODO -->
+                <div class="service-card" style="margin-bottom: 20px;">
+                    <h3><i class="fas fa-filter"></i> Filtros</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                        <select class="form-control" style="width: auto;" id="periodoFilter">
+                            <option value="hoje">Hoje</option>
+                            <option value="semana">Esta Semana</option>
+                            <option value="mes" selected>Este Mês</option>
+                            <option value="trimestre">Este Trimestre</option>
+                            <option value="ano">Este Ano</option>
+                        </select>
+                        <input type="date" class="form-control" style="width: auto;" id="dataInicio">
+                        <input type="date" class="form-control" style="width: auto;" id="dataFim">
+                        <button class="btn" onclick="atualizarGraficos()">Aplicar Filtro</button>
+                    </div>
+                </div>
+
+                <!-- CARDS DE MÉTRICAS PRINCIPAIS -->
+                <div class="services-grid">
+                    <div class="metric-card">
+                        <i class="fas fa-cash-register" style="color: var(--verde); font-size: 24px;"></i>
+                        <div class="metric-value">R$ 45.820,50</div>
+                        <div class="metric-label">Faturamento Bruto</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 12% vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card vermelho">
+                        <i class="fas fa-shopping-cart" style="color: var(--vermelho); font-size: 24px;"></i>
+                        <div class="metric-value">R$ 28.150,30</div>
+                        <div class="metric-label">Custo das Mercadorias</div>
+                        <div class="metric-trend trend-down">
+                            <i class="fas fa-arrow-down"></i> 5% vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card azul">
+                        <i class="fas fa-chart-line" style="color: var(--azul); font-size: 24px;"></i>
+                        <div class="metric-value">R$ 17.670,20</div>
+                        <div class="metric-label">Lucro Bruto</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 8% vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card laranja">
+                        <i class="fas fa-boxes" style="color: var(--laranja); font-size: 24px;"></i>
+                        <div class="metric-value">1.247</div>
+                        <div class="metric-label">Itens em Estoque</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 15 novos produtos
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRÁFICOS PRINCIPAIS -->
+                <div class="services-grid">
+                    <div class="service-card" style="grid-column: span 2;">
+                        <h3><i class="fas fa-chart-line"></i> Evolução de Vendas vs Custos</h3>
+                        <div class="grafico-container">
+                            <canvas id="graficoVendasCustos" height="250"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-percentage"></i> Margem de Lucro</h3>
+                        <div class="grafico-container">
+                            <canvas id="graficoMargem" height="250"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-boxes"></i> Giro de Estoque</h3>
+                        <div class="grafico-container">
+                            <canvas id="graficoGiroEstoque" height="250"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="service-card" style="grid-column: span 2;">
+                        <h3><i class="fas fa-users"></i> Top 10 Clientes</h3>
+                        <div class="grafico-container">
+                            <canvas id="graficoTopClientes" height="250"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-truck"></i> Fornecedores Principais</h3>
+                        <div class="grafico-container">
+                            <canvas id="graficoFornecedores" height="250"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-tags"></i> Categorias Mais Vendidas</h3>
+                        <div class="grafico-container">
+                            <canvas id="graficoCategorias" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MÉTRICAS ADICIONAIS -->
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3><i class="fas fa-bolt"></i> Vendas em Tempo Real</h3>
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 36px; font-weight: bold; color: var(--verde);">8</div>
+                            <div class="metric-label">Vendas Hoje</div>
+                            <div style="margin-top: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                    <span>Última venda:</span>
+                                    <strong>R$ 245,90</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                    <span>Ticket médio:</span>
+                                    <strong>R$ 187,50</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Alertas do Sistema</h3>
+                        <div style="margin-top: 15px;">
+                            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                                <i class="fas fa-exclamation-circle" style="color: #856404;"></i>
+                                <strong> 5 produtos com estoque baixo</strong>
+                            </div>
+                            <div style="background: #d1ecf1; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                                <i class="fas fa-info-circle" style="color: #0c5460;"></i>
+                                <strong> 2 clientes em débito</strong>
+                            </div>
+                            <div style="background: #d4edda; padding: 10px; border-radius: 5px;">
+                                <i class="fas fa-check-circle" style="color: #155724;"></i>
+                                <strong> Backup realizado hoje</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-chart-pie"></i> Indicadores Chave</h3>
+                        <div style="margin-top: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span>Margem líquida:</span>
+                                <strong style="color: var(--verde);">24.5%</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span>Prazo médio receb.:</span>
+                                <strong>28 dias</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span>Giro estoque:</span>
+                                <strong>2.8x</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span>NPS Clientes:</span>
+                                <strong style="color: var(--verde);">8.2</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- PERFIL -->
@@ -857,6 +1088,11 @@
                     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
                     // Mostra a página correspondente
                     document.getElementById(this.dataset.page).classList.add('active');
+                    
+                    // Se for a página de dashboard, inicializa os gráficos
+                    if(this.dataset.page === 'dashboard') {
+                        setTimeout(inicializarGraficos, 100);
+                    }
                 }
             });
         });
@@ -869,6 +1105,165 @@
             });
         });
 
+        // ========== DASHBOARD DE GESTÃO EMPRESARIAL ==========
+        
+        // Inicializar gráficos
+        function inicializarGraficos() {
+            // Gráfico de Vendas vs Custos
+            const ctxVendasCustos = document.getElementById('graficoVendasCustos').getContext('2d');
+            new Chart(ctxVendasCustos, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    datasets: [
+                        {
+                            label: 'Vendas (R$)',
+                            data: [38500, 41200, 45800, 39200, 47800, 51200, 48800, 52300, 49800, 54200, 56800, 61200],
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Custos (R$)',
+                            data: [24500, 26800, 29500, 25800, 31200, 32800, 31500, 34200, 32500, 35800, 37200, 39800],
+                            borderColor: '#dc3545',
+                            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Gráfico de Margem de Lucro
+            const ctxMargem = document.getElementById('graficoMargem').getContext('2d');
+            new Chart(ctxMargem, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    datasets: [{
+                        label: 'Margem (%)',
+                        data: [28.5, 29.8, 31.2, 27.9, 32.1, 30.5, 31.8, 29.7, 32.4, 31.9, 33.2, 32.8],
+                        backgroundColor: '#28a745'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Gráfico de Giro de Estoque
+            const ctxGiroEstoque = document.getElementById('graficoGiroEstoque').getContext('2d');
+            new Chart(ctxGiroEstoque, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    datasets: [{
+                        label: 'Giro de Estoque',
+                        data: [2.1, 2.3, 2.8, 2.5, 2.9, 3.1, 2.7, 3.2, 2.8, 3.4, 3.1, 3.5],
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Gráfico de Top Clientes
+            const ctxTopClientes = document.getElementById('graficoTopClientes').getContext('2d');
+            new Chart(ctxTopClientes, {
+                type: 'bar',
+                data: {
+                    labels: ['Super Mercado A', 'Oficina B', 'Agropecuária C', 'Loja D', 'Distribuidora E', 'Restaurante F', 'Construtora G', 'Farmácia H', 'Padaria I', 'Posto J'],
+                    datasets: [{
+                        label: 'Faturamento (R$)',
+                        data: [12500, 9800, 8700, 7600, 6900, 5800, 5200, 4800, 4200, 3800],
+                        backgroundColor: [
+                            '#28a745', '#20c997', '#0dcaf0', '#6f42c1', '#fd7e14',
+                            '#e83e8c', '#ffc107', '#6610f2', '#6c757d', '#198754'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y'
+                }
+            });
+
+            // Gráfico de Fornecedores
+            const ctxFornecedores = document.getElementById('graficoFornecedores').getContext('2d');
+            new Chart(ctxFornecedores, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Distribuidor A', 'Atacadista B', 'Indústria C', 'Importador D', 'Outros'],
+                    datasets: [{
+                        data: [35, 25, 20, 12, 8],
+                        backgroundColor: [
+                            '#28a745',
+                            '#20c997',
+                            '#0dcaf0',
+                            '#6f42c1',
+                            '#fd7e14'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Gráfico de Categorias
+            const ctxCategorias = document.getElementById('graficoCategorias').getContext('2d');
+            new Chart(ctxCategorias, {
+                type: 'pie',
+                data: {
+                    labels: ['Alimentos', 'Bebidas', 'Limpeza', 'Ferramentas', 'Pecças', 'Outros'],
+                    datasets: [{
+                        data: [30, 25, 15, 12, 10, 8],
+                        backgroundColor: [
+                            '#28a745',
+                            '#20c997',
+                            '#0dcaf0',
+                            '#6f42c1',
+                            '#fd7e14',
+                            '#e83e8c'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // Função para atualizar gráficos com filtros
+        function atualizarGraficos() {
+            const periodo = document.getElementById('periodoFilter').value;
+            alert(`Dashboard atualizado para o período: ${periodo}`);
+            // Aqui você implementaria a lógica para atualizar os dados dos gráficos
+        }
+
+        // Inicializar gráficos quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializa gráficos se estiver na página de dashboard
+            if(document.getElementById('dashboard').classList.contains('active')) {
+                inicializarGraficos();
+            }
+        });
+
         // Simular dados do usuário
         const userData = {
             name: "Cliente AutomaHost",
@@ -878,7 +1273,6 @@
 
         // Atualizar informações do usuário
         document.querySelector('.user-info span').textContent = `Olá, ${userData.name.split(' ')[0]}!`;
-      
     </script>
 </body>
 </html>
