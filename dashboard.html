@@ -15,9 +15,9 @@
         }
 
         :root {
-            --azul-elegante: #0f172a;           /* Azul escuro principal */
+            --azul-elegante: #0f172a;
             --azul-escuro: #0f172a;
-            --azul-escuro-2: #1a2332;           /* Azul escuro secundário */
+            --azul-escuro-2: #1a2332;
             --azul-medio: #2d3748;
             --verde: #61ce70;
             --verde-escuro: #4ca85c;
@@ -37,7 +37,6 @@
             min-height: 100vh;
         }
 
-        /* === HEADER === */
         .dashboard-header {
             background: var(--branco);
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -105,13 +104,11 @@
             box-shadow: 0 6px 20px rgba(97, 206, 112, 0.4);
         }
 
-        /* === LAYOUT PRINCIPAL === */
         .dashboard-container {
             display: flex;
             min-height: calc(100vh - 80px);
         }
 
-        /* === SIDEBAR MENU COM DESIGN MODERNO === */
         .sidebar {
             width: 80px;
             background: linear-gradient(180deg, #0f172a 0%, #1a2332 100%);
@@ -123,6 +120,7 @@
             white-space: nowrap;
             border-right: 1px solid rgba(255,255,255,0.1);
             box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
 
         .sidebar::before {
@@ -141,7 +139,7 @@
         }
 
         .menu-item {
-            padding: 16px 25px;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             gap: 18px;
@@ -151,14 +149,15 @@
             border-left: 3px solid transparent;
             cursor: pointer;
             position: relative;
-            margin: 4px 15px;
+            margin: 4px 10px;
             border-radius: 12px;
+            justify-content: flex-start;
         }
 
         .menu-item::before {
             content: '';
             position: absolute;
-            left: -15px;
+            left: -10px;
             top: 50%;
             transform: translateY(-50%);
             width: 4px;
@@ -190,6 +189,11 @@
             font-size: 20px;
             flex-shrink: 0;
             transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .sidebar:hover .menu-item i {
+            margin: 0;
         }
 
         .menu-item:hover i {
@@ -209,7 +213,6 @@
             opacity: 1;
         }
 
-        /* Tooltip para quando o menu está recolhido */
         .menu-item::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -241,7 +244,6 @@
             display: none;
         }
 
-        /* === CONTEÚDO PRINCIPAL === */
         .main-content {
             flex: 1;
             padding: 35px;
@@ -263,7 +265,6 @@
             display: block;
         }
 
-        /* === SECTIONS COM DEGRADÊ VERDE → AZUL ELEGANTE === */
         .welcome-section {
             background: linear-gradient(135deg, var(--verde), #0f172a);
             color: white;
@@ -299,7 +300,6 @@
             position: relative;
         }
 
-        /* === CARDS DE SERVIÇOS === */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -384,7 +384,6 @@
             color: white;
         }
 
-        /* === STATUS DO SERVIÇO === */
         .status-section {
             background: var(--branco);
             padding: 28px;
@@ -431,7 +430,6 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        /* === TABELAS === */
         .table {
             width: 100%;
             background: var(--branco);
@@ -488,7 +486,6 @@
             flex: 3;
         }
 
-        /* === FORMULÁRIOS === */
         .form-group {
             margin-bottom: 20px;
         }
@@ -516,7 +513,6 @@
             box-shadow: 0 0 0 3px rgba(97, 206, 112, 0.1);
         }
 
-        /* === FAQ === */
         .faq-item {
             background: var(--branco);
             border-radius: 12px;
@@ -555,7 +551,6 @@
             max-height: 200px;
         }
 
-        /* === GRÁFICOS === */
         .grafico-container {
             position: relative;
             height: 250px;
@@ -565,7 +560,6 @@
             padding: 15px;
         }
 
-        /* === CARDS DE MÉTRICAS === */
         .metric-card {
             background: var(--branco);
             padding: 25px;
@@ -646,7 +640,291 @@
             color: var(--vermelho);
         }
 
-        /* === RESPONSIVO === */
+        /* NOVOS ESTILOS PARA DASHBOARD AVANÇADO */
+        .visualization-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .view-type-selector {
+            display: flex;
+            background: var(--branco);
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .view-type-btn {
+            padding: 8px 15px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--cinza);
+            transition: all 0.3s ease;
+        }
+        
+        .view-type-btn.active {
+            background: var(--verde);
+            color: white;
+        }
+        
+        .chart-grid {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+        
+        .grid-1 { grid-template-columns: 1fr; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        
+        .chart-card {
+            background: var(--branco);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--verde), var(--roxo));
+        }
+        
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .chart-header {
+            padding: 20px 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chart-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--cinza);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        .chart-action-btn:hover {
+            color: var(--verde);
+            background: rgba(97, 206, 112, 0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            padding: 15px;
+        }
+        
+        .chart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chart-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--branco);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow: auto;
+            padding: 25px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: var(--cinza);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--vermelho);
+        }
+        
+        .modal-chart-container {
+            height: 500px;
+            width: 100%;
+        }
+        
+        .performance-indicators {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .performance-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--cinza-claro);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .performance-item i {
+            font-size: 16px;
+        }
+        
+        .performance-positive {
+            color: var(--verde);
+        }
+        
+        .performance-negative {
+            color: var(--vermelho);
+        }
+        
+        .advanced-filters {
+            background: var(--branco);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .filter-section-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--azul-escuro);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chart-view {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .chart-view.active {
+            display: block;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .loading-content .loading {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 15px;
+            border-width: 4px;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+        
         @media (max-width: 768px) {
             .dashboard-container {
                 flex-direction: column;
@@ -702,10 +980,52 @@
             .col {
                 width: 100%;
             }
+            
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            
+            .visualization-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .filter-group select,
+            .filter-group input {
+                width: 100%;
+            }
+            
+            .chart-view {
+                margin-top: 15px;
+            }
+        }
+
+        /* CORREÇÃO PARA O BUG DO MENU LATERAL */
+        .sidebar {
+            pointer-events: auto !important;
+        }
+        
+        .sidebar:hover, 
+        .sidebar:focus-within,
+        .sidebar:active {
+            width: 280px !important;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.15) !important;
         }
     </style>
 </head>
 <body>
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading"></div>
+            <p>Carregando...</p>
+        </div>
+    </div>
+
     <!-- HEADER -->
     <header class="dashboard-header">
         <div class="logo">
@@ -716,7 +1036,7 @@
             </div>
         </div>
         <div class="user-info">
-            <span>Olá, Cliente!</span>
+            <span id="userGreeting">Carregando...</span>
             <div class="user-avatar">
                 <i class="fas fa-user-cog"></i>
             </div>
@@ -725,7 +1045,7 @@
 
     <!-- LAYOUT PRINCIPAL -->
     <div class="dashboard-container">
-        <!-- MENU LATERAL COM DESIGN MODERNO -->
+        <!-- MENU LATERAL -->
         <nav class="sidebar">
             <a class="menu-item active" data-page="inicio" data-tooltip="Início">
                 <i class="fas fa-home"></i>
@@ -755,7 +1075,7 @@
                 <i class="fas fa-file-invoice"></i>
                 <span class="menu-text">Faturas</span>
             </a>
-            <a href="login.html" class="menu-item" style="margin-top: 25px; color: #fca5a5;" data-tooltip="Sair">
+            <a class="menu-item" id="logoutBtn" style="margin-top: 25px; color: #fca5a5;" data-tooltip="Sair">
                 <i class="fas fa-sign-out-alt"></i>
                 <span class="menu-text">Sair</span>
             </a>
@@ -766,7 +1086,7 @@
             <!-- INÍCIO -->
             <div id="inicio" class="page active">
                 <section class="welcome-section">
-                    <h1>Bem-vindo ao seu Portal!</h1>
+                    <h1 id="welcomeTitle">Bem-vindo ao seu Portal!</h1>
                     <p>Aqui você gerencia todos os seus serviços e conta com tecnologia de ponta.</p>
                 </section>
 
@@ -774,19 +1094,19 @@
                     <div class="service-card">
                         <h3><i class="fas fa-cube" style="color: var(--verde);"></i> Plano de Serviço</h3>
                         <p>Gerencie seu plano atual com total controle e flexibilidade</p>
-                        <a href="#plano" class="btn">Configurar</a>
+                        <button class="btn" onclick="mudarParaPagina('servicos')">Configurar</button>
                     </div>
 
                     <div class="service-card">
                         <h3><i class="fas fa-database" style="color: var(--azul);"></i> Backup</h3>
                         <p>Acesse o painel de controle de seus dados com segurança máxima</p>
-                        <a href="#backup" class="btn">Acessar</a>
+                        <button class="btn" onclick="mudarParaPagina('servicos')">Acessar</button>
                     </div>
 
                     <div class="service-card">
                         <h3><i class="fas fa-info-circle" style="color: var(--roxo);"></i> Suporte</h3>
                         <p>Consulte informações referente ao uso do Software especializado</p>
-                        <a href="#suporte" class="btn">Consultar</a>
+                        <button class="btn" onclick="mudarParaPagina('ajuda')">Consultar</button>
                     </div>
                 </div>
 
@@ -796,197 +1116,177 @@
                     <div class="status-item">
                         <div>
                             <strong style="color: var(--azul-escuro);">Plano Atual</strong>
-                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;">Plano Business Premium</p>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;" id="planoAtual">Carregando...</p>
                         </div>
-                        <span class="status-badge status-active">Ativo</span>
+                        <span class="status-badge status-active" id="statusPlano">Ativo</span>
                     </div>
 
                     <div class="status-item">
                         <div>
                             <strong style="color: var(--azul-escuro);">Último backup realizado</strong>
-                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;">Realizado hoje as 12:30</p>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;" id="ultimoBackup">Carregando...</p>
                         </div>
-                        <span class="status-badge status-active">Concluído</span>
+                        <span class="status-badge status-active" id="statusBackup">Concluído</span>
                     </div>
 
                     <div class="status-item">
                         <div>
                             <strong style="color: var(--azul-escuro);">SSL Certificate</strong>
-                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;">Válido até 15/11/2026</p>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;" id="sslInfo">Carregando...</p>
                         </div>
-                        <span class="status-badge status-active">Ativo</span>
+                        <span class="status-badge status-active" id="statusSSL">Ativo</span>
                     </div>
                 </section>
             </div>
 
-            <!-- DASHBOARD COM GRÁFICOS DE GESTÃO EMPRESARIAL -->
+            <!-- DASHBOARD AVANÇADO -->
             <div id="dashboard" class="page">
                 <div class="welcome-section">
-                    <h1><i class="fas fa-chart-bar"></i> Dashboard de Gestão</h1>
-                    <p>Métricas financeiras, estoque e desempenho comercial em tempo real</p>
+                    <h1><i class="fas fa-chart-bar"></i> Dashboard de Gestão Empresarial</h1>
+                    <p>Métricas financeiras, operacionais e de desempenho em tempo real</p>
                 </div>
 
-                <!-- FILTROS DE PERÍODO -->
-                <div class="service-card" style="margin-bottom: 25px;">
-                    <h3><i class="fas fa-filter" style="color: var(--verde);"></i> Filtros Avançados</h3>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
-                        <select class="form-control" style="width: auto; border-radius: 10px; border: 1px solid #e2e8f0;" id="periodoFilter">
-                            <option value="hoje">Hoje</option>
-                            <option value="semana">Esta Semana</option>
-                            <option value="mes" selected>Este Mês</option>
-                            <option value="trimestre">Este Trimestre</option>
-                            <option value="ano">Este Ano</option>
-                        </select>
-                        <input type="date" class="form-control" style="width: auto; border-radius: 10px; border: 1px solid #e2e8f0;" id="dataInicio">
-                        <input type="date" class="form-control" style="width: auto; border-radius: 10px; border: 1px solid #e2e8f0;" id="dataFim">
-                        <button class="btn" onclick="atualizarGraficos()">
-                            <i class="fas fa-sync-alt"></i>
-                            Aplicar Filtro
+                <!-- CONTROLES DE VISUALIZAÇÃO -->
+                <div class="visualization-controls">
+                    <div class="view-type-selector">
+                        <button class="view-type-btn active" data-view="overview">
+                            <i class="fas fa-th-large"></i> Visão Geral
                         </button>
+                        <button class="view-type-btn" data-view="financial">
+                            <i class="fas fa-chart-line"></i> Financeiro
+                        </button>
+                        <button class="view-type-btn" data-view="operational">
+                            <i class="fas fa-cogs"></i> Operacional
+                        </button>
+                        <button class="view-type-btn" data-view="commercial">
+                            <i class="fas fa-shopping-cart"></i> Comercial
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <label style="color: var(--cinza-escuro); font-weight: 500;">Layout:</label>
+                        <select class="form-control" style="width: auto;" id="layoutSelector">
+                            <option value="1">1 Gráfico</option>
+                            <option value="2" selected>2 Gráficos</option>
+                            <option value="3">3 Gráficos</option>
+                            <option value="4">4 Gráficos</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn" onclick="exportDashboard()">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+
+                <!-- FILTROS AVANÇADOS -->
+                <div class="advanced-filters">
+                    <div class="filter-section">
+                        <div class="filter-section-title">
+                            <i class="fas fa-filter"></i> Filtros Principais
+                        </div>
+                        <div class="filter-group">
+                            <select class="form-control" style="width: auto;" id="periodoFilter">
+                                <option value="hoje">Hoje</option>
+                                <option value="semana">Esta Semana</option>
+                                <option value="mes" selected>Este Mês</option>
+                                <option value="trimestre">Este Trimestre</option>
+                                <option value="ano">Este Ano</option>
+                            </select>
+                            
+                            <select class="form-control" style="width: auto;" id="comparacaoFilter">
+                                <option value="nenhum">Sem Comparação</option>
+                                <option value="mes_anterior">Mês Anterior</option>
+                                <option value="ano_anterior">Ano Anterior</option>
+                                <option value="meta">Vs. Meta</option>
+                            </select>
+                            
+                            <select class="form-control" style="width: auto;" id="departamentoFilter">
+                                <option value="todos">Todos Departamentos</option>
+                                <option value="vendas">Vendas</option>
+                                <option value="producao">Produção</option>
+                                <option value="financeiro">Financeiro</option>
+                                <option value="marketing">Marketing</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <div class="filter-section-title">
+                            <i class="fas fa-sliders-h"></i> Filtros Avançados
+                        </div>
+                        <div class="filter-group">
+                            <input type="date" class="form-control" style="width: auto;" id="dataInicio">
+                            <input type="date" class="form-control" style="width: auto;" id="dataFim">
+                            
+                            <select class="form-control" style="width: auto;" id="tipoGraficoFilter">
+                                <option value="todos">Todos os Tipos</option>
+                                <option value="linha">Gráficos de Linha</option>
+                                <option value="barra">Gráficos de Barra</option>
+                                <option value="pizza">Gráficos de Pizza</option>
+                                <option value="area">Gráficos de Área</option>
+                            </select>
+                            
+                            <button class="btn" onclick="aplicarFiltrosAvancados()">
+                                <i class="fas fa-sync-alt"></i> Aplicar
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- CARDS DE MÉTRICAS PRINCIPAIS -->
-                <div class="services-grid">
-                    <div class="metric-card">
-                        <i class="fas fa-cash-register" style="color: var(--verde); font-size: 28px;"></i>
-                        <div class="metric-value">R$ 45.820,50</div>
-                        <div class="metric-label">Faturamento Bruto</div>
-                        <div class="metric-trend trend-up">
-                            <i class="fas fa-arrow-up"></i> 12% vs mês anterior
-                        </div>
-                    </div>
+                <div class="services-grid" id="metricsContainer">
+                    <!-- Métricas carregadas via JavaScript -->
+                </div>
 
-                    <div class="metric-card vermelho">
-                        <i class="fas fa-shopping-cart" style="color: var(--vermelho); font-size: 28px;"></i>
-                        <div class="metric-value">R$ 28.150,30</div>
-                        <div class="metric-label">Custo das Mercadorias</div>
-                        <div class="metric-trend trend-down">
-                            <i class="fas fa-arrow-down"></i> 5% vs mês anterior
-                        </div>
-                    </div>
-
-                    <div class="metric-card azul">
-                        <i class="fas fa-chart-line" style="color: var(--azul); font-size: 28px;"></i>
-                        <div class="metric-value">R$ 17.670,20</div>
-                        <div class="metric-label">Lucro Bruto</div>
-                        <div class="metric-trend trend-up">
-                            <i class="fas fa-arrow-up"></i> 8% vs mês anterior
-                        </div>
-                    </div>
-
-                    <div class="metric-card laranja">
-                        <i class="fas fa-boxes" style="color: var(--laranja); font-size: 28px;"></i>
-                        <div class="metric-value">1.247</div>
-                        <div class="metric-label">Itens em Estoque</div>
-                        <div class="metric-trend trend-up">
-                            <i class="fas fa-arrow-up"></i> 15 novos produtos
-                        </div>
+                <!-- GRADE DE GRÁFICOS - VISÃO GERAL -->
+                <div id="overview-view" class="chart-view active">
+                    <div class="chart-grid grid-2" id="chartGrid">
+                        <!-- Gráficos carregados via JavaScript -->
                     </div>
                 </div>
 
-                <!-- GRÁFICOS PRINCIPAIS -->
-                <div class="services-grid">
-                    <div class="service-card" style="grid-column: span 2;">
-                        <h3><i class="fas fa-chart-line" style="color: var(--verde);"></i> Evolução de Vendas vs Custos</h3>
-                        <div class="grafico-container">
-                            <canvas id="graficoVendasCustos" height="250"></canvas>
-                        </div>
-                    </div>
-
+                <!-- VISÕES ESPECÍFICAS -->
+                <div id="financial-view" class="chart-view">
                     <div class="service-card">
-                        <h3><i class="fas fa-percentage" style="color: var(--azul);"></i> Margem de Lucro</h3>
-                        <div class="grafico-container">
-                            <canvas id="graficoMargem" height="250"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="service-card">
-                        <h3><i class="fas fa-boxes" style="color: var(--laranja);"></i> Giro de Estoque</h3>
-                        <div class="grafico-container">
-                            <canvas id="graficoGiroEstoque" height="250"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="service-card" style="grid-column: span 2;">
-                        <h3><i class="fas fa-users" style="color: var(--roxo);"></i> Top 10 Clientes</h3>
-                        <div class="grafico-container">
-                            <canvas id="graficoTopClientes" height="250"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="service-card">
-                        <h3><i class="fas fa-truck" style="color: var(--verde);"></i> Fornecedores Principais</h3>
-                        <div class="grafico-container">
-                            <canvas id="graficoFornecedores" height="250"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="service-card">
-                        <h3><i class="fas fa-tags" style="color: var(--vermelho);"></i> Categorias Mais Vendidas</h3>
-                        <div class="grafico-container">
-                            <canvas id="graficoCategorias" height="250"></canvas>
-                        </div>
+                        <h3>Dashboard Financeiro</h3>
+                        <p>Esta seção está em desenvolvimento e em breve terá gráficos específicos para análise financeira.</p>
                     </div>
                 </div>
 
-                <!-- MÉTRICAS ADICIONAIS -->
+                <div id="operational-view" class="chart-view">
+                    <div class="service-card">
+                        <h3>Dashboard Operacional</h3>
+                        <p>Esta seção está em desenvolvimento e em breve terá gráficos específicos para análise operacional.</p>
+                    </div>
+                </div>
+
+                <div id="commercial-view" class="chart-view">
+                    <div class="service-card">
+                        <h3>Dashboard Comercial</h3>
+                        <p>Esta seção está em desenvolvimento e em breve terá gráficos específicos para análise comercial.</p>
+                    </div>
+                </div>
+
+                <!-- MÉTRICAS OPERACIONAIS -->
                 <div class="services-grid">
                     <div class="service-card">
-                        <h3><i class="fas fa-bolt" style="color: var(--verde);"></i> Vendas em Tempo Real</h3>
-                        <div style="text-align: center; padding: 25px;">
-                            <div style="font-size: 42px; font-weight: bold; background: linear-gradient(135deg, var(--verde), var(--roxo)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 15px 0;">8</div>
-                            <div class="metric-label">Vendas Hoje</div>
-                            <div style="margin-top: 20px;">
-                                <div style="display: flex; justify-content: space-between; margin: 8px 0; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
-                                    <span style="color: var(--cinza);">Última venda:</span>
-                                    <strong style="color: var(--azul-escuro);">R$ 245,90</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; margin: 8px 0; padding: 8px 0;">
-                                    <span style="color: var(--cinza);">Ticket médio:</span>
-                                    <strong style="color: var(--azul-escuro);">R$ 187,50</strong>
-                                </div>
-                            </div>
+                        <h3><i class="fas fa-bolt" style="color: var(--verde);"></i> KPIs em Tempo Real</h3>
+                        <div id="kpisContainer">
+                            <!-- KPIs carregados via JavaScript -->
                         </div>
                     </div>
 
                     <div class="service-card">
                         <h3><i class="fas fa-exclamation-triangle" style="color: var(--laranja);"></i> Alertas do Sistema</h3>
-                        <div style="margin-top: 20px;">
-                            <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #f59e0b;">
-                                <i class="fas fa-exclamation-circle" style="color: #d97706;"></i>
-                                <strong style="color: #92400e; margin-left: 10px;">5 produtos com estoque baixo</strong>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #dbeafe, #93c5fd); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #3b82f6;">
-                                <i class="fas fa-info-circle" style="color: #1d4ed8;"></i>
-                                <strong style="color: #1e3a8a; margin-left: 10px;">2 clientes em débito</strong>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #dcfce7, #86efac); padding: 15px; border-radius: 12px; border-left: 4px solid #16a34a;">
-                                <i class="fas fa-check-circle" style="color: #15803d;"></i>
-                                <strong style="color: #166534; margin-left: 10px;">Backup realizado hoje</strong>
-                            </div>
+                        <div id="alertasContainer">
+                            <!-- Alertas carregados via JavaScript -->
                         </div>
                     </div>
 
                     <div class="service-card">
-                        <h3><i class="fas fa-chart-pie" style="color: var(--roxo);"></i> Indicadores Chave</h3>
-                        <div style="margin-top: 20px;">
-                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
-                                <span style="color: var(--cinza);">Margem líquida:</span>
-                                <strong style="color: var(--verde);">24.5%</strong>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
-                                <span style="color: var(--cinza);">Prazo médio receb.:</span>
-                                <strong style="color: var(--azul-escuro);">28 dias</strong>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
-                                <span style="color: var(--cinza);">Giro estoque:</span>
-                                <strong style="color: var(--azul-escuro);">2.8x</strong>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0;">
-                                <span style="color: var(--cinza);">NPS Clientes:</span>
-                                <strong style="color: var(--verde);">8.2</strong>
-                            </div>
+                        <h3><i class="fas fa-calculator" style="color: var(--roxo);"></i> Análise de Rentabilidade</h3>
+                        <div id="rentabilidadeContainer">
+                            <!-- Análise de rentabilidade carregada via JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -1002,24 +1302,24 @@
                 <div class="services-grid">
                     <div class="service-card">
                         <h3><i class="fas fa-user-edit" style="color: var(--verde);"></i> Informações Pessoais</h3>
-                        <form>
+                        <form id="perfilForm">
                             <div class="form-group">
                                 <label>Nome Completo</label>
-                                <input type="text" class="form-control" value="Cliente AutomaHost">
+                                <input type="text" class="form-control" id="nomeCompleto" required>
                             </div>
                             <div class="form-group">
                                 <label>E-mail</label>
-                                <input type="email" class="form-control" value="cliente@automahost.com.br">
+                                <input type="email" class="form-control" id="emailPerfil" required>
                             </div>
                             <div class="form-group">
                                 <label>Telefone</label>
-                                <input type="tel" class="form-control" value="(11) 99999-9999">
+                                <input type="tel" class="form-control" id="telefonePerfil">
                             </div>
                             <div class="form-group">
                                 <label>Empresa</label>
-                                <input type="text" class="form-control" value="Minha Empresa LTDA">
+                                <input type="text" class="form-control" id="empresaPerfil">
                             </div>
-                            <button type="submit" class="btn">
+                            <button type="submit" class="btn" id="salvarPerfilBtn">
                                 <i class="fas fa-save"></i>
                                 Salvar Alterações
                             </button>
@@ -1028,48 +1328,30 @@
 
                     <div class="service-card">
                         <h3><i class="fas fa-shield-alt" style="color: var(--azul);"></i> Segurança</h3>
-                        <div class="form-group">
-                            <label>Senha Atual</label>
-                            <input type="password" class="form-control" placeholder="Digite sua senha atual">
-                        </div>
-                        <div class="form-group">
-                            <label>Nova Senha</label>
-                            <input type="password" class="form-control" placeholder="Digite a nova senha">
-                        </div>
-                        <div class="form-group">
-                            <label>Confirmar Nova Senha</label>
-                            <input type="password" class="form-control" placeholder="Confirme a nova senha">
-                        </div>
-                        <button class="btn">
-                            <i class="fas fa-key"></i>
-                            Atualizar Senha
-                        </button>
+                        <form id="senhaForm">
+                            <div class="form-group">
+                                <label>Senha Atual</label>
+                                <input type="password" class="form-control" id="senhaAtual" placeholder="Digite sua senha atual">
+                            </div>
+                            <div class="form-group">
+                                <label>Nova Senha</label>
+                                <input type="password" class="form-control" id="novaSenha" placeholder="Digite a nova senha">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirmar Nova Senha</label>
+                                <input type="password" class="form-control" id="confirmarSenha" placeholder="Confirme a nova senha">
+                            </div>
+                            <button type="submit" class="btn" id="atualizarSenhaBtn">
+                                <i class="fas fa-key"></i>
+                                Atualizar Senha
+                            </button>
+                        </form>
                     </div>
 
                     <div class="service-card">
                         <h3><i class="fas fa-bell" style="color: var(--roxo);"></i> Preferências</h3>
-                        <div style="margin-top: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
-                                <span>Notificações por E-mail</span>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
-                                <span>Alertas de Segurança</span>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
-                                <span>Relatórios Semanais</span>
-                                <label class="switch">
-                                    <input type="checkbox">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
+                        <div id="preferenciasContainer">
+                            <!-- Preferências carregadas via JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -1086,74 +1368,43 @@
                     <div class="table-header">
                         <h3>Formas de Pagamento</h3>
                     </div>
-                    <div class="table-content">
-                        <div class="table-row">
-                            <div class="col-2">
-                                <strong>Cartão de Crédito</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">**** **** **** 1234</p>
-                            </div>
-                            <div class="col">
-                                <strong>Vencimento</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">12/2025</p>
-                            </div>
-                            <div class="col">
-                                <span class="status-badge status-active">Principal</span>
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-outline">Alterar</button>
-                            </div>
-                        </div>
+                    <div class="table-content" id="metodosPagamento">
+                        <!-- Métodos carregados via JavaScript -->
                     </div>
                 </div>
 
                 <div class="service-card">
                     <h3><i class="fas fa-plus-circle" style="color: var(--verde);"></i> Adicionar Cartão</h3>
-                    <form>
+                    <form id="novoCartaoForm">
                         <div class="form-group">
                             <label>Número do Cartão</label>
-                            <input type="text" class="form-control" placeholder="**** **** **** ****">
+                            <input type="text" class="form-control" id="numeroCartao" placeholder="**** **** **** ****" required>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             <div class="form-group">
                                 <label>Validade</label>
-                                <input type="text" class="form-control" placeholder="MM/AA">
+                                <input type="text" class="form-control" id="validadeCartao" placeholder="MM/AA" required>
                             </div>
                             <div class="form-group">
                                 <label>CVV</label>
-                                <input type="text" class="form-control" placeholder="***">
+                                <input type="text" class="form-control" id="cvvCartao" placeholder="***" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Nome no Cartão</label>
-                            <input type="text" class="form-control" placeholder="Como está no cartão">
+                            <input type="text" class="form-control" id="nomeCartao" placeholder="Como está no cartão" required>
                         </div>
-                        <button class="btn">Adicionar Cartão</button>
+                        <button type="submit" class="btn" id="adicionarCartaoBtn">
+                            <i class="fas fa-credit-card"></i>
+                            Adicionar Cartão
+                        </button>
                     </form>
                 </div>
 
                 <div class="service-card">
                     <h3><i class="fas fa-history" style="color: var(--azul);"></i> Histórico de Pagamentos</h3>
-                    <div style="margin-top: 15px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--cinza-claro); border-radius: 8px; margin-bottom: 10px;">
-                            <div>
-                                <strong>15/01/2024</strong>
-                                <p style="color: var(--cinza); font-size: 12px; margin: 0;">Plano Business Premium</p>
-                            </div>
-                            <div style="text-align: right;">
-                                <strong>R$ 299,90</strong>
-                                <p style="color: var(--verde); font-size: 12px; margin: 0;">Pago</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--cinza-claro); border-radius: 8px;">
-                            <div>
-                                <strong>15/12/2023</strong>
-                                <p style="color: var(--cinza); font-size: 12px; margin: 0;">Plano Business Premium</p>
-                            </div>
-                            <div style="text-align: right;">
-                                <strong>R$ 299,90</strong>
-                                <p style="color: var(--verde); font-size: 12px; margin: 0;">Pago</p>
-                            </div>
-                        </div>
+                    <div id="historicoPagamentos">
+                        <!-- Histórico carregado via JavaScript -->
                     </div>
                 </div>
             </div>
@@ -1168,54 +1419,18 @@
                 <div class="services-grid">
                     <div class="service-card">
                         <h3><i class="fas fa-question-circle" style="color: var(--azul);"></i> FAQ - Dúvidas Frequentes</h3>
-                        
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                Como faço para alterar meu plano?
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">
-                                Acesse a seção "Meus Serviços" e clique em "Alterar Plano". Você poderá visualizar todas as opções disponíveis e fazer a alteração instantaneamente.
-                            </div>
-                        </div>
-
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                O backup é automático?
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">
-                                Sim, realizamos backups automáticos diários. Você também pode fazer backups manuais a qualquer momento através do painel de backup.
-                            </div>
-                        </div>
-
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                Como entro em contato com o suporte?
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">
-                                Você pode abrir um ticket de suporte através do menu principal ou enviar um e-mail para suporte@automahost.com.br. Nosso tempo médio de resposta é de 2 horas.
-                            </div>
-                        </div>
-
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                Posso migrar meus dados de outro sistema?
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">
-                                Sim, oferecemos serviço de migração assistida. Entre em contato com nosso suporte para agendar a migração.
-                            </div>
+                        <div id="faqContainer">
+                            <!-- FAQ carregado via JavaScript -->
                         </div>
                     </div>
 
                     <div class="service-card">
                         <h3><i class="fas fa-envelope" style="color: var(--verde);"></i> Contato Direto</h3>
-                        <form>
+                        <form id="ticketForm">
                             <div class="form-group">
                                 <label>Assunto</label>
-                                <select class="form-control">
+                                <select class="form-control" id="assuntoTicket" required>
+                                    <option value="">Selecione um assunto</option>
                                     <option>Dúvida técnica</option>
                                     <option>Problema com pagamento</option>
                                     <option>Sugestão de melhoria</option>
@@ -1225,13 +1440,13 @@
                             </div>
                             <div class="form-group">
                                 <label>Descrição Detalhada</label>
-                                <textarea class="form-control" rows="5" placeholder="Descreva sua dúvida ou problema com detalhes..."></textarea>
+                                <textarea class="form-control" id="descricaoTicket" rows="5" placeholder="Descreva sua dúvida ou problema com detalhes..." required></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Anexar Arquivo (Opcional)</label>
-                                <input type="file" class="form-control">
+                                <input type="file" class="form-control" id="anexoTicket">
                             </div>
-                            <button class="btn">
+                            <button type="submit" class="btn" id="enviarTicketBtn">
                                 <i class="fas fa-paper-plane"></i>
                                 Enviar Mensagem
                             </button>
@@ -1240,28 +1455,8 @@
 
                     <div class="service-card">
                         <h3><i class="fas fa-phone-alt" style="color: var(--roxo);"></i> Canais de Atendimento</h3>
-                        <div style="margin-top: 20px;">
-                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
-                                <i class="fas fa-envelope" style="color: var(--verde); font-size: 20px;"></i>
-                                <div>
-                                    <strong>E-mail</strong>
-                                    <p style="color: var(--cinza); margin: 5px 0 0 0;">suporte@automahost.com.br</p>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
-                                <i class="fas fa-phone" style="color: var(--azul); font-size: 20px;"></i>
-                                <div>
-                                    <strong>Telefone</strong>
-                                    <p style="color: var(--cinza); margin: 5px 0 0 0;">(11) 4004-1234</p>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
-                                <i class="fas fa-clock" style="color: var(--laranja); font-size: 20px;"></i>
-                                <div>
-                                    <strong>Horário de Atendimento</strong>
-                                    <p style="color: var(--cinza); margin: 5px 0 0 0;">Segunda a Sexta: 8h às 18h</p>
-                                </div>
-                            </div>
+                        <div id="canaisAtendimento">
+                            <!-- Canais carregados via JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -1274,24 +1469,448 @@
                     <p>Gerencie todos os seus serviços contratados</p>
                 </div>
 
+                <div class="services-grid" id="servicosContainer">
+                    <!-- Serviços carregados via JavaScript -->
+                </div>
+
+                <div class="table">
+                    <div class="table-header">
+                        <h3>Histórico de Serviços</h3>
+                    </div>
+                    <div class="table-content" id="historicoServicos">
+                        <!-- Histórico carregado via JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- FATURAS -->
+            <div id="faturas" class="page">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-file-invoice"></i> Faturas</h1>
+                    <p>Visualize e baixe suas faturas</p>
+                </div>
+
+                <div class="table">
+                    <div class="table-header">
+                        <h3>Histórico de Faturas</h3>
+                    </div>
+                    <div class="table-content" id="faturasContainer">
+                        <!-- Faturas carregadas via JavaScript -->
+                    </div>
+                </div>
+
                 <div class="services-grid">
                     <div class="service-card">
-                        <h3><i class="fas fa-cube" style="color: var(--verde);"></i> Plano Atual</h3>
+                        <h3><i class="fas fa-file-invoice-dollar" style="color: var(--laranja);"></i> Próxima Fatura</h3>
+                        <div id="proximaFatura">
+                            <!-- Próxima fatura carregada via JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-chart-bar" style="color: var(--azul);"></i> Resumo Financeiro</h3>
+                        <div id="resumoFinanceiro">
+                            <!-- Resumo carregado via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL PARA GRÁFICOS EXPANDIDOS -->
+    <div class="chart-modal" id="chartModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeChartModal()">&times;</button>
+            <div class="chart-header">
+                <h3 id="modalChartTitle">Título do Gráfico</h3>
+                <div class="chart-actions">
+                    <select id="modalChartTypeSelector">
+                        <option value="line">Linha</option>
+                        <option value="bar">Barra</option>
+                        <option value="pie">Pizza</option>
+                        <option value="doughnut">Rosca</option>
+                        <option value="area">Área</option>
+                        <option value="radar">Radar</option>
+                        <option value="polarArea">Área Polar</option>
+                    </select>
+                    <button class="btn" onclick="exportChart()">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+            </div>
+            <div class="modal-chart-container">
+                <canvas id="modalChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURAÇÃO ==========
+        const API_BASE = 'http://localhost:3000/api';
+        let token = localStorage.getItem('token');
+        let userData = null;
+        let charts = {};
+        let currentExpandedChart = null;
+        let modalChart = null;
+
+        // ========== VERIFICAÇÃO DE LOGIN ==========
+        function verificarLogin() {
+            if (!token) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            userData = JSON.parse(localStorage.getItem('user'));
+            if (!userData) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            atualizarInterfaceUsuario();
+            return true;
+        }
+
+        function atualizarInterfaceUsuario() {
+            if (userData) {
+                document.getElementById('userGreeting').textContent = `Olá, ${userData.nome.split(' ')[0]}!`;
+                document.getElementById('welcomeTitle').textContent = `Bem-vindo, ${userData.nome.split(' ')[0]}!`;
+            }
+        }
+
+        // ========== FUNÇÕES DE API ==========
+        async function apiRequest(endpoint, options = {}) {
+            if (!token) {
+                window.location.href = 'login.html';
+                return null;
+            }
+
+            const defaultOptions = {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            try {
+                showLoading();
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    ...defaultOptions,
+                    ...options
+                });
+
+                if (response.status === 401) {
+                    logout();
+                    return null;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`Erro ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                hideLoading();
+                return data;
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                hideLoading();
+                alert('Erro ao carregar dados. Tente novamente.');
+                return null;
+            }
+        }
+
+        // ========== FUNÇÕES DE CARREGAMENTO ==========
+        async function carregarDadosInicio() {
+            const servicos = await apiRequest('/servicos');
+            if (servicos) {
+                document.getElementById('planoAtual').textContent = servicos.plano_atual.nome;
+                document.getElementById('ultimoBackup').textContent = servicos.backup.ultimo_backup;
+                document.getElementById('sslInfo').textContent = `Válido até ${servicos.seguranca.ssl.validade}`;
+            }
+        }
+
+        async function carregarDashboard() {
+            // Carregar métricas
+            const metrics = await apiRequest('/dashboard/metrics');
+            if (metrics) {
+                const metricsHTML = `
+                    <div class="metric-card">
+                        <i class="fas fa-cash-register" style="color: var(--verde); font-size: 28px;"></i>
+                        <div class="metric-value">R$ ${metrics.faturamento.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                        <div class="metric-label">Faturamento Bruto</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> ${metrics.tendencias.faturamento} vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card vermelho">
+                        <i class="fas fa-file-invoice-dollar" style="color: var(--vermelho); font-size: 28px;"></i>
+                        <div class="metric-value">R$ ${metrics.contasReceber.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                        <div class="metric-label">Contas a Receber</div>
+                        <div class="metric-trend trend-down">
+                            <i class="fas fa-arrow-down"></i> ${metrics.tendencias.contasReceber} vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card azul">
+                        <i class="fas fa-file-invoice" style="color: var(--azul); font-size: 28px;"></i>
+                        <div class="metric-value">R$ ${metrics.contasPagar.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                        <div class="metric-label">Contas a Pagar</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> ${metrics.tendencias.contasPagar} vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card laranja">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <i class="fas fa-percentage" style="color: var(--laranja); font-size: 28px;"></i>
+                            <div style="font-size: 14px; font-weight: 600; color: var(--laranja);">${metrics.margemLucro}%</div>
+                        </div>
+                        <div class="metric-value">R$ ${metrics.lucroLiquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                        <div class="metric-label">Lucro Líquido</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> ${metrics.tendencias.lucroLiquido} vs mês anterior
+                        </div>
+                    </div>
+                `;
+                document.getElementById('metricsContainer').innerHTML = metricsHTML;
+            }
+
+            // Carregar gráficos
+            const graficos = await apiRequest('/dashboard/graficos');
+            if (graficos) {
+                inicializarGraficos(graficos);
+            }
+
+            // Carregar KPIs
+            const kpisHTML = `
+                <div style="margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: var(--cinza);">Margem líquida:</span>
+                        <strong style="color: var(--verde);">24.5%</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: var(--cinza);">Prazo médio receb.:</span>
+                        <strong style="color: var(--azul-escuro);">28 dias</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: var(--cinza);">Giro estoque:</span>
+                        <strong style="color: var(--azul-escuro);">2.8x</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: var(--cinza);">NPS Clientes:</span>
+                        <strong style="color: var(--verde);">8.2</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0;">
+                        <span style="color: var(--cinza);">ROI:</span>
+                        <strong style="color: var(--verde);">18.7%</strong>
+                    </div>
+                </div>
+            `;
+            document.getElementById('kpisContainer').innerHTML = kpisHTML;
+
+            // Carregar alertas
+            const alertasHTML = `
+                <div style="margin-top: 20px;">
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #f59e0b;">
+                        <i class="fas fa-exclamation-circle" style="color: #d97706;"></i>
+                        <strong style="color: #92400e; margin-left: 10px;">5 produtos com estoque baixo</strong>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #fee2e2, #fca5a5); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #ef4444;">
+                        <i class="fas fa-exclamation-circle" style="color: #dc2626;"></i>
+                        <strong style="color: #991b1b; margin-left: 10px;">3 clientes com pagamento atrasado</strong>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #dbeafe, #93c5fd); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #3b82f6;">
+                        <i class="fas fa-info-circle" style="color: #1d4ed8;"></i>
+                        <strong style="color: #1e3a8a; margin-left: 10px;">2 fornecedores com entrega atrasada</strong>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #dcfce7, #86efac); padding: 15px; border-radius: 12px; border-left: 4px solid #16a34a;">
+                        <i class="fas fa-check-circle" style="color: #15803d;"></i>
+                        <strong style="color: #166534; margin-left: 10px;">Meta de vendas do mês atingida</strong>
+                    </div>
+                </div>
+            `;
+            document.getElementById('alertasContainer').innerHTML = alertasHTML;
+
+            // Carregar rentabilidade
+            const rentabilidadeHTML = `
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: var(--cinza);">ROI Projetos:</span>
+                        <strong style="color: var(--verde);">22.3%</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: var(--cinza);">Margem Produto A:</span>
+                        <strong style="color: var(--verde);">35.2%</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: var(--cinza);">Margem Produto B:</span>
+                        <strong style="color: var(--laranja);">18.7%</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0;">
+                        <span style="color: var(--cinza);">Custo/Benefício:</span>
+                        <strong style="color: var(--verde);">1.8</strong>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
+                    <div style="font-size: 14px; color: var(--cinza);">Recomendação:</div>
+                    <div style="font-weight: 600; color: var(--azul-escuro); margin-top: 5px;">Aumentar produção do Produto A</div>
+                </div>
+            `;
+            document.getElementById('rentabilidadeContainer').innerHTML = rentabilidadeHTML;
+        }
+
+        async function carregarPerfil() {
+            const perfil = await apiRequest('/perfil');
+            if (perfil) {
+                document.getElementById('nomeCompleto').value = perfil.nome;
+                document.getElementById('emailPerfil').value = perfil.email;
+                document.getElementById('telefonePerfil').value = perfil.telefone;
+                document.getElementById('empresaPerfil').value = perfil.empresa;
+            }
+
+            // Carregar preferências
+            const preferenciasHTML = `
+                <div style="margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
+                        <span>Notificações por E-mail</span>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
+                        <span>Alertas de Segurança</span>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
+                        <span>Relatórios Semanais</span>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            `;
+            document.getElementById('preferenciasContainer').innerHTML = preferenciasHTML;
+        }
+
+        async function carregarPagamentos() {
+            const metodos = await apiRequest('/pagamentos/metodos');
+            const historico = await apiRequest('/pagamentos/historico');
+
+            if (metodos) {
+                const metodosHTML = metodos.map(metodo => `
+                    <div class="table-row">
+                        <div class="col-2">
+                            <strong>${metodo.tipo}</strong>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">${metodo.numero_cartao}</p>
+                        </div>
+                        <div class="col">
+                            <strong>Vencimento</strong>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">${metodo.validade}</p>
+                        </div>
+                        <div class="col">
+                            <span class="status-badge status-active">${metodo.principal ? 'Principal' : ''}</span>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-outline">Alterar</button>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('metodosPagamento').innerHTML = metodosHTML;
+            }
+
+            if (historico) {
+                const historicoHTML = historico.map(pagamento => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--cinza-claro); border-radius: 8px; margin-bottom: 10px;">
+                        <div>
+                            <strong>${pagamento.data}</strong>
+                            <p style="color: var(--cinza); font-size: 12px; margin: 0;">${pagamento.descricao}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong>R$ ${pagamento.valor.toFixed(2)}</strong>
+                            <p style="color: var(--verde); font-size: 12px; margin: 0;">${pagamento.status}</p>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('historicoPagamentos').innerHTML = historicoHTML;
+            }
+        }
+
+        async function carregarAjuda() {
+            const faq = await apiRequest('/suporte/faq');
+            if (faq) {
+                const faqHTML = faq.map(item => `
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ${item.pergunta}
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            ${item.resposta}
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('faqContainer').innerHTML = faqHTML;
+
+                // Re-inicializar accordion
+                document.querySelectorAll('.faq-question').forEach(question => {
+                    question.addEventListener('click', function() {
+                        const faqItem = this.parentElement;
+                        faqItem.classList.toggle('active');
+                    });
+                });
+            }
+
+            // Carregar canais de atendimento
+            const canaisHTML = `
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
+                        <i class="fas fa-envelope" style="color: var(--verde); font-size: 20px;"></i>
+                        <div>
+                            <strong>E-mail</strong>
+                            <p style="color: var(--cinza); margin: 5px 0 0 0;">suporte@automahost.com.br</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
+                        <i class="fas fa-phone" style="color: var(--azul); font-size: 20px;"></i>
+                        <div>
+                            <strong>Telefone</strong>
+                            <p style="color: var(--cinza); margin: 5px 0 0 0;">(11) 4004-1234</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
+                        <i class="fas fa-clock" style="color: var(--laranja); font-size: 20px;"></i>
+                        <div>
+                            <strong>Horário de Atendimento</strong>
+                            <p style="color: var(--cinza); margin: 5px 0 0 0;">Segunda a Sexta: 8h às 18h</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('canaisAtendimento').innerHTML = canaisHTML;
+        }
+
+        async function carregarServicos() {
+            const servicos = await apiRequest('/servicos');
+            if (servicos) {
+                const servicosHTML = `
+                    <div class="service-card">
+                        <h3><i class="fas fa-cube" style="color: var(--verde);"></i> ${servicos.plano_atual.nome}</h3>
                         <div class="status-item">
                             <div>
-                                <strong>Business Premium</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">R$ 299,90/mês</p>
+                                <strong>${servicos.plano_atual.nome}</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">R$ ${servicos.plano_atual.valor}/mês</p>
                             </div>
-                            <span class="status-badge status-active">Ativo</span>
+                            <span class="status-badge status-active">${servicos.plano_atual.status}</span>
                         </div>
                         <p><strong>Recursos incluídos:</strong></p>
                         <ul style="color: var(--cinza); margin: 10px 0 20px 20px; line-height: 1.6;">
-                            <li>500GB de armazenamento</li>
-                            <li>Backup automático diário</li>
-                            <li>Suporte 24/7 prioritário</li>
-                            <li>SSL gratuito</li>
-                            <li>Relatórios avançados</li>
-                            <li>Integrações ilimitadas</li>
+                            ${servicos.plano_atual.recursos.map(recurso => `<li>${recurso}</li>`).join('')}
                         </ul>
                         <div style="display: flex; gap: 10px;">
                             <button class="btn">Fazer Upgrade</button>
@@ -1304,13 +1923,13 @@
                         <div class="status-item">
                             <div>
                                 <strong>Último Backup</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Hoje, 12:30</p>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">${servicos.backup.ultimo_backup}</p>
                             </div>
-                            <span class="status-badge status-active">Concluído</span>
+                            <span class="status-badge status-active">${servicos.backup.status}</span>
                         </div>
-                        <p>Espaço utilizado: <strong>156.8 GB / 500 GB</strong></p>
+                        <p>Espaço utilizado: <strong>${servicos.backup.espaco_utilizado}</strong></p>
                         <div style="background: #e9ecef; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden;">
-                            <div style="background: linear-gradient(90deg, var(--verde), var(--azul)); height: 100%; width: 31.4%; border-radius: 6px;"></div>
+                            <div style="background: linear-gradient(90deg, var(--verde), var(--azul)); height: 100%; width: ${servicos.backup.percentual_uso}%; border-radius: 6px;"></div>
                         </div>
                         <div style="display: flex; gap: 10px; margin-top: 15px;">
                             <button class="btn">
@@ -1329,473 +1948,449 @@
                         <div class="status-item">
                             <div>
                                 <strong>SSL Certificate</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Válido até 15/11/2026</p>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Válido até ${servicos.seguranca.ssl.validade}</p>
                             </div>
-                            <span class="status-badge status-active">Ativo</span>
+                            <span class="status-badge status-active">${servicos.seguranca.ssl.status}</span>
                         </div>
                         <div style="margin: 20px 0;">
                             <div style="display: flex; justify-content: space-between; margin: 10px 0;">
                                 <span>Firewall:</span>
-                                <strong style="color: var(--verde);">Ativo</strong>
+                                <strong style="color: var(--verde);">${servicos.seguranca.firewall}</strong>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin: 10px 0;">
                                 <span>Proteção DDoS:</span>
-                                <strong style="color: var(--verde);">Ativo</strong>
+                                <strong style="color: var(--verde);">${servicos.seguranca.protecao_ddos}</strong>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin: 10px 0;">
                                 <span>Monitoramento:</span>
-                                <strong style="color: var(--verde);">24/7</strong>
+                                <strong style="color: var(--verde);">${servicos.seguranca.monitoramento}</strong>
                             </div>
                         </div>
                         <button class="btn btn-outline">Configurações</button>
                     </div>
-                </div>
+                `;
+                document.getElementById('servicosContainer').innerHTML = servicosHTML;
+            }
 
-                <div class="table">
-                    <div class="table-header">
-                        <h3>Histórico de Serviços</h3>
+            // Carregar histórico de serviços
+            const historicoHTML = `
+                <div class="table-row">
+                    <div class="col-2">
+                        <strong>Backup Automático</strong>
+                        <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/01/2024 12:30</p>
                     </div>
-                    <div class="table-content">
-                        <div class="table-row">
-                            <div class="col-2">
-                                <strong>Backup Automático</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/01/2024 12:30</p>
-                            </div>
-                            <div class="col">
-                                <span class="status-badge status-active">Concluído</span>
-                            </div>
-                            <div class="col-2">
-                                2.1 GB processados
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col-2">
-                                <strong>Atualização de Sistema</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">14/01/2024 03:00</p>
-                            </div>
-                            <div class="col">
-                                <span class="status-badge status-active">Concluído</span>
-                            </div>
-                            <div class="col-2">
-                                Versão 2.1.3 instalada
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col-2">
-                                <strong>Verificação de Segurança</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">13/01/2024 23:15</p>
-                            </div>
-                            <div class="col">
-                                <span class="status-badge status-active">Concluído</span>
-                            </div>
-                            <div class="col-2">
-                                Nenhuma ameaça detectada
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
-                            </div>
-                        </div>
+                    <div class="col">
+                        <span class="status-badge status-active">Concluído</span>
+                    </div>
+                    <div class="col-2">
+                        2.1 GB processados
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
                     </div>
                 </div>
-            </div>
-
-            <!-- FATURAS -->
-            <div id="faturas" class="page">
-                <div class="welcome-section">
-                    <h1><i class="fas fa-file-invoice"></i> Faturas</h1>
-                    <p>Visualize e baixe suas faturas</p>
-                </div>
-
-                <div class="table">
-                    <div class="table-header">
-                        <h3>Histórico de Faturas</h3>
+                <div class="table-row">
+                    <div class="col-2">
+                        <strong>Atualização de Sistema</strong>
+                        <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">14/01/2024 03:00</p>
                     </div>
-                    <div class="table-content">
-                        <div class="table-row">
-                            <div class="col">
-                                <strong>#001234</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/01/2024</p>
-                            </div>
-                            <div class="col-2">
-                                <strong>Plano Business Premium</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Período: 15/12/2023 - 14/01/2024</p>
-                            </div>
-                            <div class="col">
-                                <strong>R$ 299,90</strong>
-                            </div>
-                            <div class="col">
-                                <span class="status-badge status-active">Paga</span>
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-outline">
-                                    <i class="fas fa-download"></i>
-                                    PDF
-                                </button>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col">
-                                <strong>#001233</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/12/2023</p>
-                            </div>
-                            <div class="col-2">
-                                <strong>Plano Business Premium</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Período: 15/11/2023 - 14/12/2023</p>
-                            </div>
-                            <div class="col">
-                                <strong>R$ 299,90</strong>
-                            </div>
-                            <div class="col">
-                                <span class="status-badge status-active">Paga</span>
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-outline">
-                                    <i class="fas fa-download"></i>
-                                    PDF
-                                </button>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col">
-                                <strong>#001232</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/11/2023</p>
-                            </div>
-                            <div class="col-2">
-                                <strong>Plano Business Premium</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Período: 15/10/2023 - 14/11/2023</p>
-                            </div>
-                            <div class="col">
-                                <strong>R$ 299,90</strong>
-                            </div>
-                            <div class="col">
-                                <span class="status-badge status-active">Paga</span>
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-outline">
-                                    <i class="fas fa-download"></i>
-                                    PDF
-                                </button>
-                            </div>
-                        </div>
+                    <div class="col">
+                        <span class="status-badge status-active">Concluído</span>
+                    </div>
+                    <div class="col-2">
+                        Versão 2.1.3 instalada
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
                     </div>
                 </div>
+                <div class="table-row">
+                    <div class="col-2">
+                        <strong>Verificação de Segurança</strong>
+                        <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">13/01/2024 23:15</p>
+                    </div>
+                    <div class="col">
+                        <span class="status-badge status-active">Concluído</span>
+                    </div>
+                    <div class="col-2">
+                        Nenhuma ameaça detectada
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('historicoServicos').innerHTML = historicoHTML;
+        }
 
-                <div class="services-grid">
-                    <div class="service-card">
-                        <h3><i class="fas fa-file-invoice-dollar" style="color: var(--laranja);"></i> Próxima Fatura</h3>
-                        <div class="status-item">
+        async function carregarFaturas() {
+            const faturas = await apiRequest('/faturas');
+            const proxima = await apiRequest('/faturas/proxima');
+
+            if (faturas) {
+                const faturasHTML = faturas.map(fatura => `
+                    <div class="table-row">
+                        <div class="col">
+                            <strong>${fatura.numero}</strong>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">${fatura.data_emissao}</p>
+                        </div>
+                        <div class="col-2">
+                            <strong>Plano Business Premium</strong>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Período: ${fatura.periodo}</p>
+                        </div>
+                        <div class="col">
+                            <strong>R$ ${fatura.valor.toFixed(2)}</strong>
+                        </div>
+                        <div class="col">
+                            <span class="status-badge status-active">${fatura.status}</span>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-outline">
+                                <i class="fas fa-download"></i>
+                                PDF
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('faturasContainer').innerHTML = faturasHTML;
+            }
+
+            if (proxima) {
+                document.getElementById('proximaFatura').innerHTML = `
+                    <div class="status-item">
+                        <div>
+                            <strong>Vencimento: ${proxima.data_vencimento}</strong>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Plano Business Premium - R$ ${proxima.valor}</p>
+                        </div>
+                        <span class="status-badge status-pending">${proxima.status}</span>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p style="color: var(--cinza); margin-bottom: 15px;">Forma de pagamento atual:</p>
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--cinza-claro); border-radius: 8px;">
+                            <i class="fas fa-credit-card" style="color: var(--verde);"></i>
                             <div>
-                                <strong>Vencimento: 15/02/2024</strong>
-                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Plano Business Premium - R$ 299,90</p>
-                            </div>
-                            <span class="status-badge status-pending">A vencer</span>
-                        </div>
-                        <div style="margin-top: 20px;">
-                            <p style="color: var(--cinza); margin-bottom: 15px;">Forma de pagamento atual:</p>
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--cinza-claro); border-radius: 8px;">
-                                <i class="fas fa-credit-card" style="color: var(--verde);"></i>
-                                <div>
-                                    <strong>Cartão Crédito</strong>
-                                    <p style="color: var(--cinza); margin: 0; font-size: 12px;">**** **** **** 1234</p>
-                                </div>
+                                <strong>Cartão Crédito</strong>
+                                <p style="color: var(--cinza); margin: 0; font-size: 12px;">**** **** **** 1234</p>
                             </div>
                         </div>
-                        <button class="btn" style="margin-top: 20px; width: 100%;">
-                            <i class="fas fa-credit-card"></i>
-                            Pagar Agora
-                        </button>
                     </div>
+                    <button class="btn" style="margin-top: 20px; width: 100%;">
+                        <i class="fas fa-credit-card"></i>
+                        Pagar Agora
+                    </button>
+                `;
+            }
 
-                    <div class="service-card">
-                        <h3><i class="fas fa-chart-bar" style="color: var(--azul);"></i> Resumo Financeiro</h3>
-                        <div style="margin-top: 20px;">
-                            <div style="display: flex; justify-content: space-between; margin: 15px 0; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;">
-                                <span>Total Pago (2024):</span>
-                                <strong>R$ 299,90</strong>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin: 15px 0; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;">
-                                <span>Próximo Vencimento:</span>
-                                <strong>15/02/2024</strong>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin: 15px 0;">
-                                <span>Status da Conta:</span>
-                                <strong style="color: var(--verde);">Em Dia</strong>
-                            </div>
-                        </div>
-                        <div style="background: var(--cinza-claro); padding: 15px; border-radius: 8px; margin-top: 15px;">
-                            <p style="color: var(--cinza); font-size: 12px; margin: 0;">
-                                <i class="fas fa-info-circle" style="color: var(--azul);"></i>
-                                Sua conta está em dia. Próxima cobrança em 15/02/2024.
-                            </p>
-                        </div>
+            // Carregar resumo financeiro
+            const resumoHTML = `
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin: 15px 0; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;">
+                        <span>Total Pago (2024):</span>
+                        <strong>R$ 299,90</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 15px 0; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;">
+                        <span>Próximo Vencimento:</span>
+                        <strong>15/02/2024</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                        <span>Status da Conta:</span>
+                        <strong style="color: var(--verde);">Em Dia</strong>
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
+                <div style="background: var(--cinza-claro); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <p style="color: var(--cinza); font-size: 12px; margin: 0;">
+                        <i class="fas fa-info-circle" style="color: var(--azul);"></i>
+                        Sua conta está em dia. Próxima cobrança em 15/02/2024.
+                    </p>
+                </div>
+            `;
+            document.getElementById('resumoFinanceiro').innerHTML = resumoHTML;
+        }
 
-    <script>
-        // Navegação entre páginas
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                if(this.getAttribute('href') === 'login.html') {
-                    if(!confirm('Deseja realmente sair?')) {
-                        e.preventDefault();
+        // ========== FUNÇÕES DE GRÁFICOS ==========
+        function inicializarGraficos(graficosData) {
+            // Destruir gráficos existentes
+            Object.values(charts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            charts = {};
+
+            // Inicializar gráficos com dados da API
+            if (graficosData.fluxoCaixa) {
+                const container = document.createElement('div');
+                container.className = 'chart-card';
+                container.innerHTML = `
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-line" style="color: var(--verde);"></i> Fluxo de Caixa - Comparativo</h3>
+                        <div class="chart-actions">
+                            <select class="chart-type-selector" data-chart="fluxoCaixa">
+                                <option value="line">Linha</option>
+                                <option value="bar">Barra</option>
+                                <option value="area">Área</option>
+                            </select>
+                            <button class="chart-action-btn" onclick="expandChart('fluxoCaixa')">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="graficoFluxoCaixa"></canvas>
+                    </div>
+                    <div class="performance-indicators">
+                        <div class="performance-item performance-positive">
+                            <i class="fas fa-arrow-up"></i> Entradas: +12%
+                        </div>
+                        <div class="performance-item performance-negative">
+                            <i class="fas fa-arrow-down"></i> Saídas: +8%
+                        </div>
+                        <div class="performance-item performance-positive">
+                            <i class="fas fa-chart-line"></i> Saldo: +15%
+                        </div>
+                    </div>
+                `;
+                document.getElementById('chartGrid').appendChild(container);
+
+                const ctx = document.getElementById('graficoFluxoCaixa').getContext('2d');
+                charts.fluxoCaixa = new Chart(ctx, {
+                    type: 'line',
+                    data: graficosData.fluxoCaixa,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
                     }
-                    return;
-                }
+                });
+            }
 
-                if(this.dataset.page) {
-                    // Remove active de todos os menus
-                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                    // Adiciona active no menu clicado
-                    this.classList.add('active');
-                    
-                    // Esconde todas as páginas
-                    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-                    // Mostra a página correspondente
-                    document.getElementById(this.dataset.page).classList.add('active');
-                    
-                    // Se for a página de dashboard, inicializa os gráficos
-                    if(this.dataset.page === 'dashboard') {
-                        setTimeout(inicializarGraficos, 100);
-                    }
-                }
-            });
-        });
+            // Adicionar mais gráficos conforme necessário...
+        }
 
-        // FAQ Accordion
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', function() {
-                const faqItem = this.parentElement;
-                faqItem.classList.toggle('active');
-            });
-        });
+        // ========== FUNÇÕES UTILITÁRIAS ==========
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
 
-        // ========== DASHBOARD DE GESTÃO EMPRESARIAL ==========
-        
-        // Inicializar gráficos
-        function inicializarGraficos() {
-            // Gráfico de Vendas vs Custos
-            const ctxVendasCustos = document.getElementById('graficoVendasCustos').getContext('2d');
-            new Chart(ctxVendasCustos, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                    datasets: [
-                        {
-                            label: 'Vendas (R$)',
-                            data: [38500, 41200, 45800, 39200, 47800, 51200, 48800, 52300, 49800, 54200, 56800, 61200],
-                            borderColor: '#61ce70',
-                            backgroundColor: 'rgba(97, 206, 112, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        },
-                        {
-                            label: 'Custos (R$)',
-                            data: [24500, 26800, 29500, 25800, 31200, 32800, 31500, 34200, 32500, 35800, 37200, 39800],
-                            borderColor: '#ef4444',
-                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
 
-            // Gráfico de Margem de Lucro
-            const ctxMargem = document.getElementById('graficoMargem').getContext('2d');
-            new Chart(ctxMargem, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                    datasets: [{
-                        label: 'Margem (%)',
-                        data: [28.5, 29.8, 31.2, 27.9, 32.1, 30.5, 31.8, 29.7, 32.4, 31.9, 33.2, 32.8],
-                        backgroundColor: '#61ce70'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
 
-            // Gráfico de Giro de Estoque
-            const ctxGiroEstoque = document.getElementById('graficoGiroEstoque').getContext('2d');
-            new Chart(ctxGiroEstoque, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                    datasets: [{
-                        label: 'Giro de Estoque',
-                        data: [2.1, 2.3, 2.8, 2.5, 2.9, 3.1, 2.7, 3.2, 2.8, 3.4, 3.1, 3.5],
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-
-            // Gráfico de Top Clientes
-            const ctxTopClientes = document.getElementById('graficoTopClientes').getContext('2d');
-            new Chart(ctxTopClientes, {
-                type: 'bar',
-                data: {
-                    labels: ['Super Mercado A', 'Oficina B', 'Agropecuária C', 'Loja D', 'Distribuidora E', 'Restaurante F', 'Construtora G', 'Farmácia H', 'Padaria I', 'Posto J'],
-                    datasets: [{
-                        label: 'Faturamento (R$)',
-                        data: [12500, 9800, 8700, 7600, 6900, 5800, 5200, 4800, 4200, 3800],
-                        backgroundColor: [
-                            '#61ce70', '#20c997', '#0dcaf0', '#8b5cf6', '#f59e0b',
-                            '#e83e8c', '#ffc107', '#6610f2', '#6c757d', '#198754'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y'
-                }
-            });
-
-            // Gráfico de Fornecedores
-            const ctxFornecedores = document.getElementById('graficoFornecedores').getContext('2d');
-            new Chart(ctxFornecedores, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Distribuidor A', 'Atacadista B', 'Indústria C', 'Importador D', 'Outros'],
-                    datasets: [{
-                        data: [35, 25, 20, 12, 8],
-                        backgroundColor: [
-                            '#61ce70',
-                            '#20c997',
-                            '#0dcaf0',
-                            '#8b5cf6',
-                            '#f59e0b'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-
-            // Gráfico de Categorias
-            const ctxCategorias = document.getElementById('graficoCategorias').getContext('2d');
-            new Chart(ctxCategorias, {
-                type: 'pie',
-                data: {
-                    labels: ['Alimentos', 'Bebidas', 'Limpeza', 'Ferramentas', 'Peças', 'Outros'],
-                    datasets: [{
-                        data: [30, 25, 15, 12, 10, 8],
-                        backgroundColor: [
-                            '#61ce70',
-                            '#20c997',
-                            '#0dcaf0',
-                            '#8b5cf6',
-                            '#f59e0b',
-                            '#e83e8c'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
+        function mudarParaPagina(pagina) {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                if (item.dataset.page === pagina) {
+                    item.click();
                 }
             });
         }
 
-        // Função para atualizar gráficos com filtros
-        function atualizarGraficos() {
-            const periodo = document.getElementById('periodoFilter').value;
-            alert(`Dashboard atualizado para o período: ${periodo}`);
-            // Aqui você implementaria a lógica para atualizar os dados dos gráficos
+        // ========== FUNÇÕES DO DASHBOARD ==========
+        function exportDashboard() {
+            alert('Dashboard exportado com sucesso!');
         }
 
-        // Inicializar gráficos quando a página carregar
+        function aplicarFiltrosAvancados() {
+            alert('Filtros aplicados com sucesso!');
+        }
+
+        function expandChart(chartId) {
+            alert(`Gráfico ${chartId} expandido!`);
+        }
+
+        function closeChartModal() {
+            document.getElementById('chartModal').classList.remove('active');
+        }
+
+        function exportChart() {
+            alert('Gráfico exportado com sucesso!');
+        }
+
+        // ========== EVENT LISTENERS ==========
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializa gráficos se estiver na página de dashboard
-            if(document.getElementById('dashboard').classList.contains('active')) {
-                inicializarGraficos();
-            }
+            // Verificar login
+            if (!verificarLogin()) return;
+
+            // Carregar dados iniciais
+            carregarDadosInicio();
+
+            // Navegação entre páginas
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    if (this.id === 'logoutBtn') {
+                        if (confirm('Deseja realmente sair?')) {
+                            logout();
+                        }
+                        return;
+                    }
+
+                    if (this.dataset.page) {
+                        // Remove active de todos os menus
+                        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                        // Adiciona active no menu clicado
+                        this.classList.add('active');
+                        
+                        // Esconde todas as páginas
+                        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                        // Mostra a página correspondente
+                        document.getElementById(this.dataset.page).classList.add('active');
+                        
+                        // Carrega dados específicos da página
+                        switch(this.dataset.page) {
+                            case 'dashboard':
+                                carregarDashboard();
+                                break;
+                            case 'perfil':
+                                carregarPerfil();
+                                break;
+                            case 'pagamentos':
+                                carregarPagamentos();
+                                break;
+                            case 'servicos':
+                                carregarServicos();
+                                break;
+                            case 'faturas':
+                                carregarFaturas();
+                                break;
+                            case 'ajuda':
+                                carregarAjuda();
+                                break;
+                        }
+                    }
+                });
+            });
+
+            // Formulário de perfil
+            document.getElementById('perfilForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('salvarPerfilBtn');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<div class="loading"></div> Salvando...';
+                btn.disabled = true;
+
+                // Simular salvamento
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Perfil atualizado com sucesso!');
+                }, 1500);
+            });
+
+            // Formulário de senha
+            document.getElementById('senhaForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('atualizarSenhaBtn');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<div class="loading"></div> Atualizando...';
+                btn.disabled = true;
+
+                // Simular atualização
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Senha atualizada com sucesso!');
+                    document.getElementById('senhaForm').reset();
+                }, 1500);
+            });
+
+            // Formulário de novo cartão
+            document.getElementById('novoCartaoForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('adicionarCartaoBtn');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<div class="loading"></div> Adicionando...';
+                btn.disabled = true;
+
+                // Simular adição
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Cartão adicionado com sucesso!');
+                    document.getElementById('novoCartaoForm').reset();
+                }, 1500);
+            });
+
+            // Formulário de ticket
+            document.getElementById('ticketForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('enviarTicketBtn');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<div class="loading"></div> Enviando...';
+                btn.disabled = true;
+
+                // Simular envio
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Ticket enviado com sucesso! Em breve entraremos em contato.');
+                    document.getElementById('ticketForm').reset();
+                }, 2000);
+            });
+
+            // FAQ Accordion
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', function() {
+                    const faqItem = this.parentElement;
+                    faqItem.classList.toggle('active');
+                });
+            });
+
+            // CSS para switches
+            const style = document.createElement('style');
+            style.textContent = `
+                .switch {
+                    position: relative;
+                    display: inline-block;
+                    width: 50px;
+                    height: 24px;
+                }
+                
+                .switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+                
+                .slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    transition: .4s;
+                    border-radius: 24px;
+                }
+                
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 16px;
+                    width: 16px;
+                    left: 4px;
+                    bottom: 4px;
+                    background-color: white;
+                    transition: .4s;
+                    border-radius: 50%;
+                }
+                
+                input:checked + .slider {
+                    background-color: #61ce70;
+                }
+                
+                input:checked + .slider:before {
+                    transform: translateX(26px);
+                }
+            `;
+            document.head.appendChild(style);
         });
-
-        // Simular dados do usuário
-        const userData = {
-            name: "Cliente AutomaHost",
-            email: "cliente@automahost.com.br",
-            plan: "Business Premium"
-        };
-
-        // Atualizar informações do usuário
-        document.querySelector('.user-info span').textContent = `Olá, ${userData.name.split(' ')[0]}!`;
-
-        // CSS para switches
-        const style = document.createElement('style');
-        style.textContent = `
-            .switch {
-                position: relative;
-                display: inline-block;
-                width: 50px;
-                height: 24px;
-            }
-            
-            .switch input {
-                opacity: 0;
-                width: 0;
-                height: 0;
-            }
-            
-            .slider {
-                position: absolute;
-                cursor: pointer;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #ccc;
-                transition: .4s;
-                border-radius: 24px;
-            }
-            
-            .slider:before {
-                position: absolute;
-                content: "";
-                height: 16px;
-                width: 16px;
-                left: 4px;
-                bottom: 4px;
-                background-color: white;
-                transition: .4s;
-                border-radius: 50%;
-            }
-            
-            input:checked + .slider {
-                background-color: #61ce70;
-            }
-            
-            input:checked + .slider:before {
-                transform: translateX(26px);
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
