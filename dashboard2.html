@@ -1,0 +1,2638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AutomaHost</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --azul-elegante: #0f172a;
+            --azul-escuro: #0f172a;
+            --azul-escuro-2: #1a2332;
+            --azul-medio: #2d3748;
+            --verde: #61ce70;
+            --verde-escuro: #4ca85c;
+            --cinza-claro: #f8fafc;
+            --cinza: #64748b;
+            --cinza-escuro: #1e293b;
+            --branco: #ffffff;
+            --azul: #3b82f6;
+            --vermelho: #ef4444;
+            --laranja: #f59e0b;
+            --roxo: #8b5cf6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--cinza-escuro);
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: var(--branco);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            height: 45px;
+            filter: brightness(0.9);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text .main {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--azul-escuro);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text .sub {
+            font-size: 12px;
+            color: var(--cinza);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(97, 206, 112, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 6px 20px rgba(97, 206, 112, 0.4);
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 80px;
+            background: linear-gradient(180deg, #0f172a 0%, #1a2332 100%);
+            color: white;
+            padding: 30px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--verde), var(--roxo));
+        }
+
+        .sidebar:hover {
+            width: 280px;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.15);
+        }
+
+        .menu-item {
+            padding: 16px 20px; /* Reduzido para centralizar melhor */
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            text-decoration: none;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            position: relative;
+            margin: 4px 10px; /* Reduzido para centralizar melhor */
+            border-radius: 12px;
+            justify-content: flex-start; /* Garante alinhamento à esquerda quando expandido */
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            left: -10px; /* Ajustado para o novo padding */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 0;
+            background: var(--verde);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: linear-gradient(135deg, rgba(97, 206, 112, 0.15), rgba(139, 92, 246, 0.1));
+            color: white;
+            border-left-color: var(--verde);
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .menu-item.active::before {
+            height: 60%;
+        }
+
+        .menu-item:hover::before {
+            height: 40%;
+        }
+
+        .menu-item i {
+            width: 22px;
+            text-align: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            margin: 0 auto; /* Centraliza os ícones quando menu recolhido */
+        }
+
+        .sidebar:hover .menu-item i {
+            margin: 0; /* Remove centralização quando menu expandido */
+        }
+
+        .menu-item:hover i {
+            transform: scale(1.1);
+            color: var(--verde);
+        }
+
+        .menu-text {
+            opacity: 0;
+            transition: all 0.3s ease 0.1s;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
+        }
+
+        .menu-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--azul-elegante);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 500;
+        }
+
+        .menu-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+            left: 90px;
+        }
+
+        .sidebar:hover .menu-item::after {
+            display: none;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 35px;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, var(--verde), #0f172a);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 35px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .welcome-section h1 {
+            margin-bottom: 12px;
+            font-size: 32px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .welcome-section p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .service-card {
+            background: var(--branco);
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--verde), var(--roxo));
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-card h3 {
+            color: var(--azul-escuro);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: var(--cinza);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(97, 206, 112, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(97, 206, 112, 0.4);
+            background: linear-gradient(135deg, var(--verde-escuro), var(--verde));
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--verde);
+            color: var(--verde);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--verde);
+            color: white;
+        }
+
+        .status-section {
+            background: var(--branco);
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(97, 206, 112, 0.1);
+            color: var(--verde-escuro);
+            border: 1px solid rgba(97, 206, 112, 0.3);
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-expired {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .table {
+            width: 100%;
+            background: var(--branco);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .table-header {
+            background: var(--cinza-claro);
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table-header h3 {
+            color: var(--azul-escuro);
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .table-content {
+            padding: 0;
+        }
+
+        .table-row {
+            display: flex;
+            padding: 18px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row:hover {
+            background: #f8fafc;
+        }
+
+        .col {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .col-2 {
+            flex: 2;
+        }
+
+        .col-3 {
+            flex: 3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--cinza-escuro);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: var(--branco);
+        }
+
+        .form-control:focus {
+            border-color: var(--verde);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(97, 206, 112, 0.1);
+        }
+
+        .faq-item {
+            background: var(--branco);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            padding: 20px;
+            background: var(--cinza-claro);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: var(--azul-escuro);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #f1f5f9;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: var(--cinza);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 200px;
+        }
+
+        .grafico-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+            background: var(--branco);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .metric-card {
+            background: var(--branco);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            border-left: 4px solid var(--verde);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--verde), var(--roxo));
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .metric-card.vermelho {
+            border-left-color: var(--vermelho);
+        }
+
+        .metric-card.vermelho::before {
+            background: linear-gradient(90deg, var(--vermelho), var(--laranja));
+        }
+
+        .metric-card.azul {
+            border-left-color: var(--azul);
+        }
+
+        .metric-card.azul::before {
+            background: linear-gradient(90deg, var(--azul), var(--roxo));
+        }
+
+        .metric-card.laranja {
+            border-left-color: var(--laranja);
+        }
+
+        .metric-card.laranja::before {
+            background: linear-gradient(90deg, var(--laranja), var(--vermelho));
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 15px 0;
+            background: linear-gradient(135deg, var(--azul-escuro), var(--cinza-escuro));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-label {
+            color: var(--cinza);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .metric-trend {
+            font-size: 13px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: var(--verde);
+        }
+
+        .trend-down {
+            color: var(--vermelho);
+        }
+
+        /* NOVOS ESTILOS PARA DASHBOARD AVANÇADO */
+        .visualization-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .view-type-selector {
+            display: flex;
+            background: var(--branco);
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .view-type-btn {
+            padding: 8px 15px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--cinza);
+            transition: all 0.3s ease;
+        }
+        
+        .view-type-btn.active {
+            background: var(--verde);
+            color: white;
+        }
+        
+        .chart-grid {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+        
+        .grid-1 { grid-template-columns: 1fr; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        
+        .chart-card {
+            background: var(--branco);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--verde), var(--roxo));
+        }
+        
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .chart-header {
+            padding: 20px 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chart-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--cinza);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        .chart-action-btn:hover {
+            color: var(--verde);
+            background: rgba(97, 206, 112, 0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            padding: 15px;
+        }
+        
+        .chart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chart-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--branco);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow: auto;
+            padding: 25px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: var(--cinza);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--vermelho);
+        }
+        
+        .modal-chart-container {
+            height: 500px;
+            width: 100%;
+        }
+        
+        .performance-indicators {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .performance-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--cinza-claro);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .performance-item i {
+            font-size: 16px;
+        }
+        
+        .performance-positive {
+            color: var(--verde);
+        }
+        
+        .performance-negative {
+            color: var(--vermelho);
+        }
+        
+        .advanced-filters {
+            background: var(--branco);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .filter-section-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--azul-escuro);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chart-view {
+            display: none;
+            margin-top: 20px; /* Adicionado espaçamento para evitar sobreposição */
+        }
+        
+        .chart-view.active {
+            display: block;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px 0;
+            }
+
+            .sidebar:hover {
+                width: 100%;
+            }
+
+            .menu-text {
+                opacity: 1;
+            }
+
+            .menu-item::after {
+                display: none;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                padding: 15px 20px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .user-info span {
+                display: none;
+            }
+
+            .logo-text .main {
+                font-size: 20px;
+            }
+
+            .logo-text .sub {
+                font-size: 10px;
+            }
+
+            .table-row {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .col {
+                width: 100%;
+            }
+            
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            
+            .visualization-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .filter-group select,
+            .filter-group input {
+                width: 100%;
+            }
+            
+            .chart-view {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="dashboard-header">
+        <div class="logo">
+            <img src="https://ofertasdigitais.github.io/automa/logo.png" alt="AutomaHost" class="logo-img">
+            <div class="logo-text">
+                <div class="main">AutomaHost</div>
+                <div class="sub">Soluções Inteligentes</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span>Olá, Cliente!</span>
+            <div class="user-avatar">
+                <i class="fas fa-user-cog"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="dashboard-container">
+        <!-- MENU LATERAL -->
+        <nav class="sidebar">
+            <a class="menu-item active" data-page="inicio" data-tooltip="Início">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Início</span>
+            </a>
+            <a class="menu-item" data-page="dashboard" data-tooltip="Dashboard">
+                <i class="fas fa-chart-bar"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a class="menu-item" data-page="perfil" data-tooltip="Perfil">
+                <i class="fas fa-user"></i>
+                <span class="menu-text">Perfil</span>
+            </a>
+            <a class="menu-item" data-page="pagamentos" data-tooltip="Pagamentos">
+                <i class="fas fa-credit-card"></i>
+                <span class="menu-text">Pagamentos</span>
+            </a>
+            <a class="menu-item" data-page="ajuda" data-tooltip="Ajuda & Suporte">
+                <i class="fas fa-headset"></i>
+                <span class="menu-text">Ajuda & Suporte</span>
+            </a>
+            <a class="menu-item" data-page="servicos" data-tooltip="Meus Serviços">
+                <i class="fas fa-server"></i>
+                <span class="menu-text">Meus Serviços</span>
+            </a>
+            <a class="menu-item" data-page="faturas" data-tooltip="Faturas">
+                <i class="fas fa-file-invoice"></i>
+                <span class="menu-text">Faturas</span>
+            </a>
+            <a href="login.html" class="menu-item" style="margin-top: 25px; color: #fca5a5;" data-tooltip="Sair">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="menu-text">Sair</span>
+            </a>
+        </nav>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main-content">
+            <!-- INÍCIO -->
+            <div id="inicio" class="page active">
+                <section class="welcome-section">
+                    <h1>Bem-vindo ao seu Portal!</h1>
+                    <p>Aqui você gerencia todos os seus serviços e conta com tecnologia de ponta.</p>
+                </section>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3><i class="fas fa-cube" style="color: var(--verde);"></i> Plano de Serviço</h3>
+                        <p>Gerencie seu plano atual com total controle e flexibilidade</p>
+                        <a href="#plano" class="btn">Configurar</a>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-database" style="color: var(--azul);"></i> Backup</h3>
+                        <p>Acesse o painel de controle de seus dados com segurança máxima</p>
+                        <a href="#backup" class="btn">Acessar</a>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-info-circle" style="color: var(--roxo);"></i> Suporte</h3>
+                        <p>Consulte informações referente ao uso do Software especializado</p>
+                        <a href="#suporte" class="btn">Consultar</a>
+                    </div>
+                </div>
+
+                <section class="status-section">
+                    <h2 style="margin-bottom: 25px; color: var(--azul-escuro); font-size: 22px;">Status dos Serviços</h2>
+                    
+                    <div class="status-item">
+                        <div>
+                            <strong style="color: var(--azul-escuro);">Plano Atual</strong>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;">Plano Business Premium</p>
+                        </div>
+                        <span class="status-badge status-active">Ativo</span>
+                    </div>
+
+                    <div class="status-item">
+                        <div>
+                            <strong style="color: var(--azul-escuro);">Último backup realizado</strong>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;">Realizado hoje as 12:30</p>
+                        </div>
+                        <span class="status-badge status-active">Concluído</span>
+                    </div>
+
+                    <div class="status-item">
+                        <div>
+                            <strong style="color: var(--azul-escuro);">SSL Certificate</strong>
+                            <p style="color: var(--cinza); font-size: 14px; margin-top: 6px;">Válido até 15/11/2026</p>
+                        </div>
+                        <span class="status-badge status-active">Ativo</span>
+                    </div>
+                </section>
+            </div>
+
+            <!-- DASHBOARD AVANÇADO -->
+            <div id="dashboard" class="page">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-chart-bar"></i> Dashboard de Gestão Empresarial</h1>
+                    <p>Métricas financeiras, operacionais e de desempenho em tempo real</p>
+                </div>
+
+                <!-- CONTROLES DE VISUALIZAÇÃO -->
+                <div class="visualization-controls">
+                    <div class="view-type-selector">
+                        <button class="view-type-btn active" data-view="overview">
+                            <i class="fas fa-th-large"></i> Visão Geral
+                        </button>
+                        <button class="view-type-btn" data-view="financial">
+                            <i class="fas fa-chart-line"></i> Financeiro
+                        </button>
+                        <button class="view-type-btn" data-view="operational">
+                            <i class="fas fa-cogs"></i> Operacional
+                        </button>
+                        <button class="view-type-btn" data-view="commercial">
+                            <i class="fas fa-shopping-cart"></i> Comercial
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <label style="color: var(--cinza-escuro); font-weight: 500;">Layout:</label>
+                        <select class="form-control" style="width: auto;" id="layoutSelector">
+                            <option value="1">1 Gráfico</option>
+                            <option value="2" selected>2 Gráficos</option>
+                            <option value="3">3 Gráficos</option>
+                            <option value="4">4 Gráficos</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn" onclick="exportDashboard()">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+
+                <!-- FILTROS AVANÇADOS -->
+                <div class="advanced-filters">
+                    <div class="filter-section">
+                        <div class="filter-section-title">
+                            <i class="fas fa-filter"></i> Filtros Principais
+                        </div>
+                        <div class="filter-group">
+                            <select class="form-control" style="width: auto;" id="periodoFilter">
+                                <option value="hoje">Hoje</option>
+                                <option value="semana">Esta Semana</option>
+                                <option value="mes" selected>Este Mês</option>
+                                <option value="trimestre">Este Trimestre</option>
+                                <option value="ano">Este Ano</option>
+                            </select>
+                            
+                            <select class="form-control" style="width: auto;" id="comparacaoFilter">
+                                <option value="nenhum">Sem Comparação</option>
+                                <option value="mes_anterior">Mês Anterior</option>
+                                <option value="ano_anterior">Ano Anterior</option>
+                                <option value="meta">Vs. Meta</option>
+                            </select>
+                            
+                            <select class="form-control" style="width: auto;" id="departamentoFilter">
+                                <option value="todos">Todos Departamentos</option>
+                                <option value="vendas">Vendas</option>
+                                <option value="producao">Produção</option>
+                                <option value="financeiro">Financeiro</option>
+                                <option value="marketing">Marketing</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <div class="filter-section-title">
+                            <i class="fas fa-sliders-h"></i> Filtros Avançados
+                        </div>
+                        <div class="filter-group">
+                            <input type="date" class="form-control" style="width: auto;" id="dataInicio">
+                            <input type="date" class="form-control" style="width: auto;" id="dataFim">
+                            
+                            <select class="form-control" style="width: auto;" id="tipoGraficoFilter">
+                                <option value="todos">Todos os Tipos</option>
+                                <option value="linha">Gráficos de Linha</option>
+                                <option value="barra">Gráficos de Barra</option>
+                                <option value="pizza">Gráficos de Pizza</option>
+                                <option value="area">Gráficos de Área</option>
+                            </select>
+                            
+                            <button class="btn" onclick="aplicarFiltrosAvancados()">
+                                <i class="fas fa-sync-alt"></i> Aplicar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARDS DE MÉTRICAS PRINCIPAIS -->
+                <div class="services-grid">
+                    <div class="metric-card">
+                        <i class="fas fa-cash-register" style="color: var(--verde); font-size: 28px;"></i>
+                        <div class="metric-value">R$ 45.820,50</div>
+                        <div class="metric-label">Faturamento Bruto</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 12% vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card vermelho">
+                        <i class="fas fa-file-invoice-dollar" style="color: var(--vermelho); font-size: 28px;"></i>
+                        <div class="metric-value">R$ 18.450,30</div>
+                        <div class="metric-label">Contas a Receber</div>
+                        <div class="metric-trend trend-down">
+                            <i class="fas fa-arrow-down"></i> 8% vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card azul">
+                        <i class="fas fa-file-invoice" style="color: var(--azul); font-size: 28px;"></i>
+                        <div class="metric-value">R$ 12.670,20</div>
+                        <div class="metric-label">Contas a Pagar</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 5% vs mês anterior
+                        </div>
+                    </div>
+
+                    <div class="metric-card laranja">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <i class="fas fa-percentage" style="color: var(--laranja); font-size: 28px;"></i>
+                            <div style="font-size: 14px; font-weight: 600; color: var(--laranja);">32.8%</div>
+                        </div>
+                        <div class="metric-value">R$ 17.670,20</div>
+                        <div class="metric-label">Lucro Líquido</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 8% vs mês anterior
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRADE DE GRÁFICOS - VISÃO GERAL -->
+                <div id="overview-view" class="chart-view active">
+                    <div class="chart-grid grid-2" id="chartGrid">
+                        <!-- Gráfico 1: Fluxo de Caixa Comparativo -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-line" style="color: var(--verde);"></i> Fluxo de Caixa - Comparativo</h3>
+                                <div class="chart-actions">
+                                    <select class="chart-type-selector" data-chart="fluxoCaixa">
+                                        <option value="line">Linha</option>
+                                        <option value="bar">Barra</option>
+                                        <option value="area">Área</option>
+                                    </select>
+                                    <button class="chart-action-btn" onclick="expandChart('fluxoCaixa')">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="graficoFluxoCaixa"></canvas>
+                            </div>
+                            <div class="performance-indicators">
+                                <div class="performance-item performance-positive">
+                                    <i class="fas fa-arrow-up"></i> Entradas: +12%
+                                </div>
+                                <div class="performance-item performance-negative">
+                                    <i class="fas fa-arrow-down"></i> Saídas: +8%
+                                </div>
+                                <div class="performance-item performance-positive">
+                                    <i class="fas fa-chart-line"></i> Saldo: +15%
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico 2: Indicadores Financeiros -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-balance-scale" style="color: var(--azul);"></i> Indicadores Financeiros</h3>
+                                <div class="chart-actions">
+                                    <select class="chart-type-selector" data-chart="indicadores">
+                                        <option value="bar">Barra</option>
+                                        <option value="line">Linha</option>
+                                        <option value="radar">Radar</option>
+                                    </select>
+                                    <button class="chart-action-btn" onclick="expandChart('indicadores')">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="graficoIndicadores"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico 3: Giro de Estoque -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-boxes" style="color: var(--laranja);"></i> Giro de Estoque</h3>
+                                <div class="chart-actions">
+                                    <select class="chart-type-selector" data-chart="giroEstoque">
+                                        <option value="line">Linha</option>
+                                        <option value="bar">Barra</option>
+                                    </select>
+                                    <button class="chart-action-btn" onclick="expandChart('giroEstoque')">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="graficoGiroEstoque"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico 4: Desempenho por Departamento -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-bar" style="color: var(--roxo);"></i> Desempenho por Departamento</h3>
+                                <div class="chart-actions">
+                                    <select class="chart-type-selector" data-chart="departamentos">
+                                        <option value="bar">Barra</option>
+                                        <option value="pie">Pizza</option>
+                                        <option value="doughnut">Rosca</option>
+                                    </select>
+                                    <button class="chart-action-btn" onclick="expandChart('departamentos')">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="graficoDepartamentos"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico 5: Eficiência Operacional -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-truck-loading" style="color: var(--verde);"></i> Eficiência Operacional</h3>
+                                <div class="chart-actions">
+                                    <select class="chart-type-selector" data-chart="eficiencia">
+                                        <option value="doughnut">Rosca</option>
+                                        <option value="pie">Pizza</option>
+                                        <option value="bar">Barra</option>
+                                    </select>
+                                    <button class="chart-action-btn" onclick="expandChart('eficiencia')">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="graficoEficiencia"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico 6: Produtividade por Funcionário -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-users" style="color: var(--vermelho);"></i> Produtividade por Funcionário</h3>
+                                <div class="chart-actions">
+                                    <select class="chart-type-selector" data-chart="produtividade">
+                                        <option value="bar">Barra</option>
+                                        <option value="polarArea">Área Polar</option>
+                                        <option value="radar">Radar</option>
+                                    </select>
+                                    <button class="chart-action-btn" onclick="expandChart('produtividade')">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="graficoProdutividade"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VISÕES ESPECÍFICAS (Financeiro, Operacional, Comercial) -->
+                <div id="financial-view" class="chart-view">
+                    <div class="service-card">
+                        <h3>Dashboard Financeiro</h3>
+                        <p>Esta seção está em desenvolvimento e em breve terá gráficos específicos para análise financeira.</p>
+                        <div class="chart-container" style="height: 200px; margin-top: 20px;">
+                            <canvas id="financialPlaceholder"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="operational-view" class="chart-view">
+                    <div class="service-card">
+                        <h3>Dashboard Operacional</h3>
+                        <p>Esta seção está em desenvolvimento e em breve terá gráficos específicos para análise operacional.</p>
+                        <div class="chart-container" style="height: 200px; margin-top: 20px;">
+                            <canvas id="operationalPlaceholder"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="commercial-view" class="chart-view">
+                    <div class="service-card">
+                        <h3>Dashboard Comercial</h3>
+                        <p>Esta seção está em desenvolvimento e em breve terá gráficos específicos para análise comercial.</p>
+                        <div class="chart-container" style="height: 200px; margin-top: 20px;">
+                            <canvas id="commercialPlaceholder"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MÉTRICAS OPERACIONAIS -->
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3><i class="fas fa-bolt" style="color: var(--verde);"></i> KPIs em Tempo Real</h3>
+                        <div style="margin-top: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                                <span style="color: var(--cinza);">Margem líquida:</span>
+                                <strong style="color: var(--verde);">24.5%</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                                <span style="color: var(--cinza);">Prazo médio receb.:</span>
+                                <strong style="color: var(--azul-escuro);">28 dias</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                                <span style="color: var(--cinza);">Giro estoque:</span>
+                                <strong style="color: var(--azul-escuro);">2.8x</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                                <span style="color: var(--cinza);">NPS Clientes:</span>
+                                <strong style="color: var(--verde);">8.2</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0;">
+                                <span style="color: var(--cinza);">ROI:</span>
+                                <strong style="color: var(--verde);">18.7%</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-exclamation-triangle" style="color: var(--laranja);"></i> Alertas do Sistema</h3>
+                        <div style="margin-top: 20px;">
+                            <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #f59e0b;">
+                                <i class="fas fa-exclamation-circle" style="color: #d97706;"></i>
+                                <strong style="color: #92400e; margin-left: 10px;">5 produtos com estoque baixo</strong>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #fee2e2, #fca5a5); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #ef4444;">
+                                <i class="fas fa-exclamation-circle" style="color: #dc2626;"></i>
+                                <strong style="color: #991b1b; margin-left: 10px;">3 clientes com pagamento atrasado</strong>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #dbeafe, #93c5fd); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #3b82f6;">
+                                <i class="fas fa-info-circle" style="color: #1d4ed8;"></i>
+                                <strong style="color: #1e3a8a; margin-left: 10px;">2 fornecedores com entrega atrasada</strong>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #dcfce7, #86efac); padding: 15px; border-radius: 12px; border-left: 4px solid #16a34a;">
+                                <i class="fas fa-check-circle" style="color: #15803d;"></i>
+                                <strong style="color: #166534; margin-left: 10px;">Meta de vendas do mês atingida</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-calculator" style="color: var(--roxo);"></i> Análise de Rentabilidade</h3>
+                        <div style="margin-top: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                                <span style="color: var(--cinza);">ROI Projetos:</span>
+                                <strong style="color: var(--verde);">22.3%</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                                <span style="color: var(--cinza);">Margem Produto A:</span>
+                                <strong style="color: var(--verde);">35.2%</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                                <span style="color: var(--cinza);">Margem Produto B:</span>
+                                <strong style="color: var(--laranja);">18.7%</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 12px 0; padding: 10px 0;">
+                                <span style="color: var(--cinza);">Custo/Benefício:</span>
+                                <strong style="color: var(--verde);">1.8</strong>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
+                            <div style="font-size: 14px; color: var(--cinza);">Recomendação:</div>
+                            <div style="font-weight: 600; color: var(--azul-escuro); margin-top: 5px;">Aumentar produção do Produto A</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL PARA GRÁFICOS EXPANDIDOS -->
+            <div class="chart-modal" id="chartModal">
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeChartModal()">&times;</button>
+                    <div class="chart-header">
+                        <h3 id="modalChartTitle">Título do Gráfico</h3>
+                        <div class="chart-actions">
+                            <select id="modalChartTypeSelector">
+                                <option value="line">Linha</option>
+                                <option value="bar">Barra</option>
+                                <option value="pie">Pizza</option>
+                                <option value="doughnut">Rosca</option>
+                                <option value="area">Área</option>
+                                <option value="radar">Radar</option>
+                                <option value="polarArea">Área Polar</option>
+                            </select>
+                            <button class="btn" onclick="exportChart()">
+                                <i class="fas fa-download"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-chart-container">
+                        <canvas id="modalChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERFIL -->
+            <div id="perfil" class="page">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-user"></i> Meu Perfil</h1>
+                    <p>Gerencie suas informações pessoais e preferências</p>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3><i class="fas fa-user-edit" style="color: var(--verde);"></i> Informações Pessoais</h3>
+                        <form>
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" class="form-control" value="Cliente AutomaHost">
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="email" class="form-control" value="cliente@automahost.com.br">
+                            </div>
+                            <div class="form-group">
+                                <label>Telefone</label>
+                                <input type="tel" class="form-control" value="(11) 99999-9999">
+                            </div>
+                            <div class="form-group">
+                                <label>Empresa</label>
+                                <input type="text" class="form-control" value="Minha Empresa LTDA">
+                            </div>
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i>
+                                Salvar Alterações
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-shield-alt" style="color: var(--azul);"></i> Segurança</h3>
+                        <div class="form-group">
+                            <label>Senha Atual</label>
+                            <input type="password" class="form-control" placeholder="Digite sua senha atual">
+                        </div>
+                        <div class="form-group">
+                            <label>Nova Senha</label>
+                            <input type="password" class="form-control" placeholder="Digite a nova senha">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmar Nova Senha</label>
+                            <input type="password" class="form-control" placeholder="Confirme a nova senha">
+                        </div>
+                        <button class="btn">
+                            <i class="fas fa-key"></i>
+                            Atualizar Senha
+                        </button>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-bell" style="color: var(--roxo);"></i> Preferências</h3>
+                        <div style="margin-top: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
+                                <span>Notificações por E-mail</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
+                                <span>Alertas de Segurança</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--cinza-claro); border-radius: 8px;">
+                                <span>Relatórios Semanais</span>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGAMENTOS -->
+            <div id="pagamentos" class="page">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-credit-card"></i> Pagamentos</h1>
+                    <p>Gerencie suas formas de pagamento e faturas</p>
+                </div>
+
+                <div class="table">
+                    <div class="table-header">
+                        <h3>Formas de Pagamento</h3>
+                    </div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="col-2">
+                                <strong>Cartão de Crédito</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">**** **** **** 1234</p>
+                            </div>
+                            <div class="col">
+                                <strong>Vencimento</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">12/2025</p>
+                            </div>
+                            <div class="col">
+                                <span class="status-badge status-active">Principal</span>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-outline">Alterar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <h3><i class="fas fa-plus-circle" style="color: var(--verde);"></i> Adicionar Cartão</h3>
+                    <form>
+                        <div class="form-group">
+                            <label>Número do Cartão</label>
+                            <input type="text" class="form-control" placeholder="**** **** **** ****">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Validade</label>
+                                <input type="text" class="form-control" placeholder="MM/AA">
+                            </div>
+                            <div class="form-group">
+                                <label>CVV</label>
+                                <input type="text" class="form-control" placeholder="***">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nome no Cartão</label>
+                            <input type="text" class="form-control" placeholder="Como está no cartão">
+                        </div>
+                        <button class="btn">Adicionar Cartão</button>
+                    </form>
+                </div>
+
+                <div class="service-card">
+                    <h3><i class="fas fa-history" style="color: var(--azul);"></i> Histórico de Pagamentos</h3>
+                    <div style="margin-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--cinza-claro); border-radius: 8px; margin-bottom: 10px;">
+                            <div>
+                                <strong>15/01/2024</strong>
+                                <p style="color: var(--cinza); font-size: 12px; margin: 0;">Plano Business Premium</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <strong>R$ 299,90</strong>
+                                <p style="color: var(--verde); font-size: 12px; margin: 0;">Pago</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--cinza-claro); border-radius: 8px;">
+                            <div>
+                                <strong>15/12/2023</strong>
+                                <p style="color: var(--cinza); font-size: 12px; margin: 0;">Plano Business Premium</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <strong>R$ 299,90</strong>
+                                <p style="color: var(--verde); font-size: 12px; margin: 0;">Pago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AJUDA -->
+            <div id="ajuda" class="page">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-headset"></i> Ajuda & Suporte</h1>
+                    <p>Encontre respostas para suas dúvidas e entre em contato</p>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3><i class="fas fa-question-circle" style="color: var(--azul);"></i> FAQ - Dúvidas Frequentes</h3>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                Como faço para alterar meu plano?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Acesse a seção "Meus Serviços" e clique em "Alterar Plano". Você poderá visualizar todas as opções disponíveis e fazer a alteração instantaneamente.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                O backup é automático?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Sim, realizamos backups automáticos diários. Você também pode fazer backups manuais a qualquer momento através do painel de backup.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                Como entro em contato com o suporte?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Você pode abrir um ticket de suporte através do menu principal ou enviar um e-mail para suporte@automahost.com.br. Nosso tempo médio de resposta é de 2 horas.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                Posso migrar meus dados de outro sistema?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Sim, oferecemos serviço de migração assistida. Entre em contato com nosso suporte para agendar a migração.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-envelope" style="color: var(--verde);"></i> Contato Direto</h3>
+                        <form>
+                            <div class="form-group">
+                                <label>Assunto</label>
+                                <select class="form-control">
+                                    <option>Dúvida técnica</option>
+                                    <option>Problema com pagamento</option>
+                                    <option>Sugestão de melhoria</option>
+                                    <option>Relatar problema</option>
+                                    <option>Outro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Descrição Detalhada</label>
+                                <textarea class="form-control" rows="5" placeholder="Descreva sua dúvida ou problema com detalhes..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Anexar Arquivo (Opcional)</label>
+                                <input type="file" class="form-control">
+                            </div>
+                            <button class="btn">
+                                <i class="fas fa-paper-plane"></i>
+                                Enviar Mensagem
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-phone-alt" style="color: var(--roxo);"></i> Canais de Atendimento</h3>
+                        <div style="margin-top: 20px;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
+                                <i class="fas fa-envelope" style="color: var(--verde); font-size: 20px;"></i>
+                                <div>
+                                    <strong>E-mail</strong>
+                                    <p style="color: var(--cinza); margin: 5px 0 0 0;">suporte@automahost.com.br</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
+                                <i class="fas fa-phone" style="color: var(--azul); font-size: 20px;"></i>
+                                <div>
+                                    <strong>Telefone</strong>
+                                    <p style="color: var(--cinza); margin: 5px 0 0 0;">(11) 4004-1234</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--cinza-claro); border-radius: 10px;">
+                                <i class="fas fa-clock" style="color: var(--laranja); font-size: 20px;"></i>
+                                <div>
+                                    <strong>Horário de Atendimento</strong>
+                                    <p style="color: var(--cinza); margin: 5px 0 0 0;">Segunda a Sexta: 8h às 18h</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVIÇOS -->
+            <div id="servicos" class="page">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-server"></i> Meus Serviços</h1>
+                    <p>Gerencie todos os seus serviços contratados</p>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3><i class="fas fa-cube" style="color: var(--verde);"></i> Plano Atual</h3>
+                        <div class="status-item">
+                            <div>
+                                <strong>Business Premium</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">R$ 299,90/mês</p>
+                            </div>
+                            <span class="status-badge status-active">Ativo</span>
+                        </div>
+                        <p><strong>Recursos incluídos:</strong></p>
+                        <ul style="color: var(--cinza); margin: 10px 0 20px 20px; line-height: 1.6;">
+                            <li>500GB de armazenamento</li>
+                            <li>Backup automático diário</li>
+                            <li>Suporte 24/7 prioritário</li>
+                            <li>SSL gratuito</li>
+                            <li>Relatórios avançados</li>
+                            <li>Integrações ilimitadas</li>
+                        </ul>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn">Fazer Upgrade</button>
+                            <button class="btn btn-outline">Alterar Plano</button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-database" style="color: var(--azul);"></i> Backup</h3>
+                        <div class="status-item">
+                            <div>
+                                <strong>Último Backup</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Hoje, 12:30</p>
+                            </div>
+                            <span class="status-badge status-active">Concluído</span>
+                        </div>
+                        <p>Espaço utilizado: <strong>156.8 GB / 500 GB</strong></p>
+                        <div style="background: #e9ecef; height: 12px; border-radius: 6px; margin: 15px 0; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, var(--verde), var(--azul)); height: 100%; width: 31.4%; border-radius: 6px;"></div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="btn">
+                                <i class="fas fa-play"></i>
+                                Backup Agora
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-history"></i>
+                                Histórico
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-shield-alt" style="color: var(--roxo);"></i> Segurança</h3>
+                        <div class="status-item">
+                            <div>
+                                <strong>SSL Certificate</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Válido até 15/11/2026</p>
+                            </div>
+                            <span class="status-badge status-active">Ativo</span>
+                        </div>
+                        <div style="margin: 20px 0;">
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span>Firewall:</span>
+                                <strong style="color: var(--verde);">Ativo</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span>Proteção DDoS:</span>
+                                <strong style="color: var(--verde);">Ativo</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                                <span>Monitoramento:</span>
+                                <strong style="color: var(--verde);">24/7</strong>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline">Configurações</button>
+                    </div>
+                </div>
+
+                <div class="table">
+                    <div class="table-header">
+                        <h3>Histórico de Serviços</h3>
+                    </div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="col-2">
+                                <strong>Backup Automático</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/01/2024 12:30</p>
+                            </div>
+                            <div class="col">
+                                <span class="status-badge status-active">Concluído</span>
+                            </div>
+                            <div class="col-2">
+                                2.1 GB processados
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="col-2">
+                                <strong>Atualização de Sistema</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">14/01/2024 03:00</p>
+                            </div>
+                            <div class="col">
+                                <span class="status-badge status-active">Concluído</span>
+                            </div>
+                            <div class="col-2">
+                                Versão 2.1.3 instalada
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="col-2">
+                                <strong>Verificação de Segurança</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">13/01/2024 23:15</p>
+                            </div>
+                            <div class="col">
+                                <span class="status-badge status-active">Concluído</span>
+                            </div>
+                            <div class="col-2">
+                                Nenhuma ameaça detectada
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Detalhes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FATURAS -->
+            <div id="faturas" class="page">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-file-invoice"></i> Faturas</h1>
+                    <p>Visualize e baixe suas faturas</p>
+                </div>
+
+                <div class="table">
+                    <div class="table-header">
+                        <h3>Histórico de Faturas</h3>
+                    </div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="col">
+                                <strong>#001234</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/01/2024</p>
+                            </div>
+                            <div class="col-2">
+                                <strong>Plano Business Premium</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Período: 15/12/2023 - 14/01/2024</p>
+                            </div>
+                            <div class="col">
+                                <strong>R$ 299,90</strong>
+                            </div>
+                            <div class="col">
+                                <span class="status-badge status-active">Paga</span>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-download"></i>
+                                    PDF
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="col">
+                                <strong>#001233</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/12/2023</p>
+                            </div>
+                            <div class="col-2">
+                                <strong>Plano Business Premium</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Período: 15/11/2023 - 14/12/2023</p>
+                            </div>
+                            <div class="col">
+                                <strong>R$ 299,90</strong>
+                            </div>
+                            <div class="col">
+                                <span class="status-badge status-active">Paga</span>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-download"></i>
+                                    PDF
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="col">
+                                <strong>#001232</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">15/11/2023</p>
+                            </div>
+                            <div class="col-2">
+                                <strong>Plano Business Premium</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Período: 15/10/2023 - 14/11/2023</p>
+                            </div>
+                            <div class="col">
+                                <strong>R$ 299,90</strong>
+                            </div>
+                            <div class="col">
+                                <span class="status-badge status-active">Paga</span>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-download"></i>
+                                    PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3><i class="fas fa-file-invoice-dollar" style="color: var(--laranja);"></i> Próxima Fatura</h3>
+                        <div class="status-item">
+                            <div>
+                                <strong>Vencimento: 15/02/2024</strong>
+                                <p style="color: var(--cinza); font-size: 14px; margin-top: 5px;">Plano Business Premium - R$ 299,90</p>
+                            </div>
+                            <span class="status-badge status-pending">A vencer</span>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <p style="color: var(--cinza); margin-bottom: 15px;">Forma de pagamento atual:</p>
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--cinza-claro); border-radius: 8px;">
+                                <i class="fas fa-credit-card" style="color: var(--verde);"></i>
+                                <div>
+                                    <strong>Cartão Crédito</strong>
+                                    <p style="color: var(--cinza); margin: 0; font-size: 12px;">**** **** **** 1234</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn" style="margin-top: 20px; width: 100%;">
+                            <i class="fas fa-credit-card"></i>
+                            Pagar Agora
+                        </button>
+                    </div>
+
+                    <div class="service-card">
+                        <h3><i class="fas fa-chart-bar" style="color: var(--azul);"></i> Resumo Financeiro</h3>
+                        <div style="margin-top: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin: 15px 0; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;">
+                                <span>Total Pago (2024):</span>
+                                <strong>R$ 299,90</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 15px 0; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;">
+                                <span>Próximo Vencimento:</span>
+                                <strong>15/02/2024</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                                <span>Status da Conta:</span>
+                                <strong style="color: var(--verde);">Em Dia</strong>
+                            </div>
+                        </div>
+                        <div style="background: var(--cinza-claro); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                            <p style="color: var(--cinza); font-size: 12px; margin: 0;">
+                                <i class="fas fa-info-circle" style="color: var(--azul);"></i>
+                                Sua conta está em dia. Próxima cobrança em 15/02/2024.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Variáveis globais para controle dos gráficos
+        let charts = {};
+        let currentExpandedChart = null;
+        let modalChart = null;
+        
+        // Navegação entre páginas
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if(this.getAttribute('href') === 'login.html') {
+                    if(!confirm('Deseja realmente sair?')) {
+                        e.preventDefault();
+                    }
+                    return;
+                }
+
+                if(this.dataset.page) {
+                    // Remove active de todos os menus
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    // Adiciona active no menu clicado
+                    this.classList.add('active');
+                    
+                    // Esconde todas as páginas
+                    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                    // Mostra a página correspondente
+                    document.getElementById(this.dataset.page).classList.add('active');
+                    
+                    // Se for a página de dashboard, inicializa os gráficos
+                    if(this.dataset.page === 'dashboard') {
+                        setTimeout(inicializarDashboardAvancado, 100);
+                    }
+                }
+            });
+        });
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+
+        // ========== DASHBOARD AVANÇADO ==========
+        
+        // Inicializar dashboard avançado
+        function inicializarDashboardAvancado() {
+            // Inicializar controles de visualização
+            inicializarControlesVisualizacao();
+            
+            // Inicializar gráficos
+            inicializarGraficosAvancados();
+            
+            // Aplicar layout inicial
+            aplicarLayout(2);
+        }
+        
+        // Inicializar controles de visualização
+        function inicializarControlesVisualizacao() {
+            // Controles de tipo de visualização
+            document.querySelectorAll('.view-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active de todos os botões
+                    document.querySelectorAll('.view-type-btn').forEach(b => b.classList.remove('active'));
+                    // Adiciona active no botão clicado
+                    this.classList.add('active');
+                    
+                    // Esconde todas as visualizações
+                    document.querySelectorAll('.chart-view').forEach(view => view.classList.remove('active'));
+                    // Mostra a visualização correspondente
+                    document.getElementById(this.dataset.view + '-view').classList.add('active');
+                });
+            });
+            
+            // Controle de layout
+            document.getElementById('layoutSelector').addEventListener('change', function() {
+                aplicarLayout(parseInt(this.value));
+            });
+            
+            // Controles de tipo de gráfico
+            document.querySelectorAll('.chart-type-selector').forEach(selector => {
+                selector.addEventListener('change', function() {
+                    const chartId = this.dataset.chart;
+                    alterarTipoGrafico(chartId, this.value);
+                });
+            });
+        }
+        
+        // Aplicar layout selecionado
+        function aplicarLayout(numColunas) {
+            const chartGrid = document.getElementById('chartGrid');
+            chartGrid.className = 'chart-grid';
+            
+            switch(numColunas) {
+                case 1:
+                    chartGrid.classList.add('grid-1');
+                    break;
+                case 2:
+                    chartGrid.classList.add('grid-2');
+                    break;
+                case 3:
+                    chartGrid.classList.add('grid-3');
+                    break;
+                case 4:
+                    chartGrid.classList.add('grid-4');
+                    break;
+            }
+        }
+        
+        // Inicializar gráficos avançados
+        function inicializarGraficosAvancados() {
+            // Gráfico de Fluxo de Caixa Comparativo
+            const ctxFluxoCaixa = document.getElementById('graficoFluxoCaixa').getContext('2d');
+            charts.fluxoCaixa = new Chart(ctxFluxoCaixa, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    datasets: [
+                        {
+                            label: 'Entradas (R$)',
+                            data: [38500, 41200, 45800, 39200, 47800, 51200, 48800, 52300, 49800, 54200, 56800, 61200],
+                            borderColor: '#61ce70',
+                            backgroundColor: 'rgba(97, 206, 112, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Saídas (R$)',
+                            data: [24500, 26800, 29500, 25800, 31200, 32800, 31500, 34200, 32500, 35800, 37200, 39800],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Saldo (R$)',
+                            data: [14000, 14400, 16300, 13400, 16600, 18400, 17300, 18100, 17300, 18400, 19600, 21400],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Comparativo Mensal'
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Indicadores Financeiros
+            const ctxIndicadores = document.getElementById('graficoIndicadores').getContext('2d');
+            charts.indicadores = new Chart(ctxIndicadores, {
+                type: 'bar',
+                data: {
+                    labels: ['Margem Líquida', 'ROI', 'Rentabilidade', 'Liquidez', 'Endividamento'],
+                    datasets: [
+                        {
+                            label: 'Atual',
+                            data: [24.5, 18.7, 15.2, 1.8, 0.32],
+                            backgroundColor: '#61ce70'
+                        },
+                        {
+                            label: 'Meta',
+                            data: [28, 22, 18, 2.0, 0.25],
+                            backgroundColor: '#3b82f6'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Percentual (%)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Giro de Estoque
+            const ctxGiroEstoque = document.getElementById('graficoGiroEstoque').getContext('2d');
+            charts.giroEstoque = new Chart(ctxGiroEstoque, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    datasets: [
+                        {
+                            label: 'Giro Real',
+                            data: [2.1, 2.3, 2.8, 2.5, 2.9, 3.1, 2.7, 3.2, 2.8, 3.4, 3.1, 3.5],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Giro Meta',
+                            data: [2.5, 2.5, 2.5, 2.8, 2.8, 2.8, 3.0, 3.0, 3.0, 3.2, 3.2, 3.2],
+                            borderColor: '#61ce70',
+                            backgroundColor: 'rgba(97, 206, 112, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Gráfico de Desempenho por Departamento
+            const ctxDepartamentos = document.getElementById('graficoDepartamentos').getContext('2d');
+            charts.departamentos = new Chart(ctxDepartamentos, {
+                type: 'bar',
+                data: {
+                    labels: ['Vendas', 'Produção', 'Marketing', 'Financeiro', 'RH', 'TI'],
+                    datasets: [
+                        {
+                            label: 'Meta',
+                            data: [100, 95, 80, 90, 85, 88],
+                            backgroundColor: '#e2e8f0'
+                        },
+                        {
+                            label: 'Realizado',
+                            data: [112, 92, 75, 95, 82, 96],
+                            backgroundColor: '#61ce70'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Desempenho (%)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Eficiência Operacional
+            const ctxEficiencia = document.getElementById('graficoEficiencia').getContext('2d');
+            charts.eficiencia = new Chart(ctxEficiencia, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Eficiente', 'Melhorável', 'Ineficiente'],
+                    datasets: [{
+                        data: [65, 25, 10],
+                        backgroundColor: [
+                            '#61ce70',
+                            '#f59e0b',
+                            '#ef4444'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Processos Operacionais'
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Produtividade por Funcionário
+            const ctxProdutividade = document.getElementById('graficoProdutividade').getContext('2d');
+            charts.produtividade = new Chart(ctxProdutividade, {
+                type: 'bar',
+                data: {
+                    labels: ['João', 'Maria', 'Pedro', 'Ana', 'Carlos', 'Fernanda'],
+                    datasets: [{
+                        label: 'Produtividade (%)',
+                        data: [95, 112, 88, 105, 92, 118],
+                        backgroundColor: [
+                            '#61ce70',
+                            '#20c997',
+                            '#0dcaf0',
+                            '#8b5cf6',
+                            '#f59e0b',
+                            '#e83e8c'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y'
+                }
+            });
+
+            // Gráficos placeholder para as outras visualizações
+            const ctxFinancial = document.getElementById('financialPlaceholder').getContext('2d');
+            new Chart(ctxFinancial, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar'],
+                    datasets: [{
+                        label: 'Placeholder',
+                        data: [10, 20, 30],
+                        backgroundColor: '#61ce70'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            const ctxOperational = document.getElementById('operationalPlaceholder').getContext('2d');
+            new Chart(ctxOperational, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar'],
+                    datasets: [{
+                        label: 'Placeholder',
+                        data: [15, 25, 35],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            const ctxCommercial = document.getElementById('commercialPlaceholder').getContext('2d');
+            new Chart(ctxCommercial, {
+                type: 'doughnut',
+                data: {
+                    labels: ['A', 'B', 'C'],
+                    datasets: [{
+                        data: [40, 30, 30],
+                        backgroundColor: [
+                            '#61ce70',
+                            '#f59e0b',
+                            '#ef4444'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+        
+        // Alterar tipo de gráfico
+        function alterarTipoGrafico(chartId, newType) {
+            if (charts[chartId]) {
+                // Destruir gráfico atual
+                charts[chartId].destroy();
+                
+                // Recriar com novo tipo
+                const ctx = document.getElementById('grafico' + capitalizeFirstLetter(chartId)).getContext('2d');
+                const data = obterDadosGrafico(chartId);
+                
+                charts[chartId] = new Chart(ctx, {
+                    type: newType,
+                    data: data,
+                    options: obterOpcoesGrafico(chartId, newType)
+                });
+            }
+        }
+        
+        // Expandir gráfico no modal
+        function expandChart(chartId) {
+            currentExpandedChart = chartId;
+            const modal = document.getElementById('chartModal');
+            const modalTitle = document.getElementById('modalChartTitle');
+            const modalChartCanvas = document.getElementById('modalChart');
+            const modalTypeSelector = document.getElementById('modalChartTypeSelector');
+            
+            // Definir título do modal
+            const chartElement = document.querySelector(`[data-chart="${chartId}"]`);
+            const chartHeader = chartElement.closest('.chart-header').querySelector('h3');
+            modalTitle.textContent = chartHeader.textContent;
+            
+            // Configurar seletor de tipo no modal
+            modalTypeSelector.value = charts[chartId].config.type;
+            modalTypeSelector.onchange = function() {
+                alterarTipoGraficoModal(this.value);
+            };
+            
+            // Criar gráfico no modal
+            const data = obterDadosGrafico(chartId);
+            const options = obterOpcoesGrafico(chartId, charts[chartId].config.type);
+            options.maintainAspectRatio = true;
+            options.responsive = true;
+            
+            // Destruir gráfico modal anterior se existir
+            if (modalChart) {
+                modalChart.destroy();
+            }
+            
+            modalChart = new Chart(modalChartCanvas, {
+                type: charts[chartId].config.type,
+                data: data,
+                options: options
+            });
+            
+            // Mostrar modal
+            modal.classList.add('active');
+        }
+        
+        // Fechar modal de gráfico
+        function closeChartModal() {
+            document.getElementById('chartModal').classList.remove('active');
+            if (modalChart) {
+                modalChart.destroy();
+                modalChart = null;
+            }
+            currentExpandedChart = null;
+        }
+        
+        // Alterar tipo de gráfico no modal
+        function alterarTipoGraficoModal(newType) {
+            if (modalChart && currentExpandedChart) {
+                modalChart.destroy();
+                
+                const modalChartCanvas = document.getElementById('modalChart');
+                const data = obterDadosGrafico(currentExpandedChart);
+                const options = obterOpcoesGrafico(currentExpandedChart, newType);
+                options.maintainAspectRatio = true;
+                options.responsive = true;
+                
+                modalChart = new Chart(modalChartCanvas, {
+                    type: newType,
+                    data: data,
+                    options: options
+                });
+            }
+        }
+        
+        // Exportar gráfico
+        function exportChart() {
+            if (modalChart) {
+                const link = document.createElement('a');
+                link.download = 'grafico-' + currentExpandedChart + '.png';
+                link.href = modalChart.toBase64Image();
+                link.click();
+            }
+        }
+        
+        // Exportar dashboard
+        function exportDashboard() {
+            alert('Funcionalidade de exportação do dashboard será implementada aqui!');
+            // Em uma implementação real, isso geraria um PDF ou imagem do dashboard completo
+        }
+        
+        // Aplicar filtros avançados
+        function aplicarFiltrosAvancados() {
+            const periodo = document.getElementById('periodoFilter').value;
+            const comparacao = document.getElementById('comparacaoFilter').value;
+            const departamento = document.getElementById('departamentoFilter').value;
+            const tipoGrafico = document.getElementById('tipoGraficoFilter').value;
+            
+            alert(`Filtros aplicados:\nPeríodo: ${periodo}\nComparação: ${comparacao}\nDepartamento: ${departamento}\nTipo Gráfico: ${tipoGrafico}`);
+            
+            // Em uma implementação real, aqui atualizaríamos os dados dos gráficos
+            // com base nos filtros selecionados
+        }
+        
+        // Funções auxiliares
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        
+        function obterDadosGrafico(chartId) {
+            // Em uma implementação real, isso retornaria os dados específicos para cada gráfico
+            // Aqui é apenas um exemplo simplificado
+            switch(chartId) {
+                case 'fluxoCaixa':
+                    return {
+                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                        datasets: [
+                            {
+                                label: 'Entradas (R$)',
+                                data: [38500, 41200, 45800, 39200, 47800, 51200, 48800, 52300, 49800, 54200, 56800, 61200],
+                                borderColor: '#61ce70',
+                                backgroundColor: 'rgba(97, 206, 112, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            },
+                            {
+                                label: 'Saídas (R$)',
+                                data: [24500, 26800, 29500, 25800, 31200, 32800, 31500, 34200, 32500, 35800, 37200, 39800],
+                                borderColor: '#ef4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }
+                        ]
+                    };
+                // Outros casos para outros gráficos...
+                default:
+                    return charts[chartId].data;
+            }
+        }
+        
+        function obterOpcoesGrafico(chartId, type) {
+            // Opções básicas para todos os gráficos
+            const baseOptions = {
+                responsive: true,
+                maintainAspectRatio: false
+            };
+            
+            // Personalizações específicas por tipo de gráfico
+            switch(type) {
+                case 'bar':
+                    baseOptions.scales = {
+                        y: { beginAtZero: true }
+                    };
+                    break;
+                case 'line':
+                    baseOptions.elements = {
+                        line: { tension: 0.4 }
+                    };
+                    break;
+                // Outros casos para outros tipos de gráfico...
+            }
+            
+            return baseOptions;
+        }
+
+        // Inicializar dashboard quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializa dashboard se estiver na página de dashboard
+            if(document.getElementById('dashboard').classList.contains('active')) {
+                inicializarDashboardAvancado();
+            }
+            
+            // Simular dados do usuário
+            const userData = {
+                name: "Cliente AutomaHost",
+                email: "cliente@automahost.com.br",
+                plan: "Business Premium"
+            };
+
+            // Atualizar informações do usuário
+            document.querySelector('.user-info span').textContent = `Olá, ${userData.name.split(' ')[0]}!`;
+        });
+
+        // CSS para switches
+        const style = document.createElement('style');
+        style.textContent = `
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 50px;
+                height: 24px;
+            }
+            
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: .4s;
+                border-radius: 24px;
+            }
+            
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 16px;
+                width: 16px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+            
+            input:checked + .slider {
+                background-color: #61ce70;
+            }
+            
+            input:checked + .slider:before {
+                transform: translateX(26px);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
